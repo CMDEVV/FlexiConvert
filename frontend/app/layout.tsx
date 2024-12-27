@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import TestSidebar from "@/components/TestSidebar";
 import HomeContent from "@/components/HomeContent";
 import Tss from "./detail/[id]/page";
+import NewSidebar from "@/components/NewSidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,14 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <SidebarProvider>
-          <AppSidebar />
-          <main>
-            <SidebarTrigger /> */}
-        <TestSidebar mainContent={children} />
+        <NewSidebar />
+        {/* <TestSidebar mainContent={children} /> */}
         {/* {children} */}
-        {/* </main>
-        </SidebarProvider> */}
       </body>
     </html>
   );

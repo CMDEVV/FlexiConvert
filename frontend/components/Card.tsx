@@ -33,9 +33,9 @@ function CardMain() {
   //   const [val1, , val2] = tools.map((item) => item.name.split(" "));
 
   return (
-    <div className="flex space-x-5">
+    <div className="grid sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-3 gap-5 ">
       {tools.map((item) => (
-        <Card key={item.id} className="w-80 cursor-pointer">
+        <Card key={item.id} className="sm:w-1 md:w-96 cursor-pointer ">
           <CardHeader className="items-center">
             <CardTitle> {item.name.match(/\w+/g)[0] || "N/A"}</CardTitle>
             <ChevronDownIcon className="w-10" />

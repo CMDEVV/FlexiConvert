@@ -79,7 +79,7 @@ const TestSidebar = ({ mainContent }) => {
           className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white shadow-lg transition-all duration-300 ${
             isSidebarOpen
               ? "w-64"
-              : "w-0 -translate-x-full lg:translate-x-0 lg:w-20"
+              : "w-0 -translate-x-full lg:translate-x-0 lg:w-64"
           } overflow-hidden z-20`}
         >
           <nav className="h-full py-4 px-4 py-2">
@@ -104,17 +104,15 @@ const TestSidebar = ({ mainContent }) => {
                 >
                   <div className="flex items-center space-x-3">
                     {item.icon}
-                    <span className={`${!isSidebarOpen ? "lg:hidden" : ""}`}>
-                      {item.title}
-                    </span>
+                    <span>{item.title}</span>
                   </div>
                   <FiChevronDown
                     className={`transition-transform ${
                       openDropdowns[item.title] ? "rotate-180" : ""
-                    } ${!isSidebarOpen ? "lg:hidden" : ""}`}
+                    } `}
                   />
                 </button>
-                {openDropdowns[item.title] && isSidebarOpen && (
+                {openDropdowns[item.title] && (
                   <div className="mt-2 ml-6 space-y-2">
                     {item.items.map((subItem) => (
                       <button
