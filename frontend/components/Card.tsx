@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import {
   Card,
@@ -13,14 +13,17 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const tools = [
   {
+    id: 1,
     name: "All",
     href: "#",
   },
   {
+    id: 2,
     name: "Png To Jpeg",
     href: "#",
   },
   {
+    id: 3,
     name: "Jpeg To Png",
     href: "#",
   },
@@ -30,9 +33,9 @@ function CardMain() {
   //   const [val1, , val2] = tools.map((item) => item.name.split(" "));
 
   return (
-    <div className="flex space-x-5 bg-red-500">
+    <div className="flex space-x-5">
       {tools.map((item) => (
-        <Card key={item.name} className="w-80 cursor-pointer">
+        <Card key={item.id} className="w-80 cursor-pointer">
           <CardHeader className="items-center">
             <CardTitle> {item.name.match(/\w+/g)[0] || "N/A"}</CardTitle>
             <ChevronDownIcon className="w-10" />

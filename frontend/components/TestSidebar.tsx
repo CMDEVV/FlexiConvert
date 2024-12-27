@@ -13,36 +13,16 @@ import {
   FiX,
 } from "react-icons/fi";
 
-const TestSidebar = () => {
+const TestSidebar = ({ mainContent }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openDropdowns, setOpenDropdowns] = useState({});
 
   const navigationItems = [
-    // {
-    //   title: "Home",
-    //   icon: <FiHome className="w-5 h-5" />,
-    //   items: [""],
-    // },
     {
       title: "Tools",
       icon: <FiBox className="w-5 h-5" />,
       items: ["Png to Jpeg", "Jpeg to Png"],
     },
-    // {
-    //   title: "Settings",
-    //   icon: <FiSettings className="w-5 h-5" />,
-    //   items: ["Profile", "Account", "Preferences"],
-    // },
-    // {
-    //   title: "Users",
-    //   icon: <FiUser className="w-5 h-5" />,
-    //   items: ["Team", "Permissions", "Roles"],
-    // },
-    // {
-    //   title: "Messages",
-    //   icon: <FiMail className="w-5 h-5" />,
-    //   items: ["Inbox", "Sent", "Drafts"],
-    // },
   ];
 
   const toggleDropdown = (title: string) => {
@@ -57,7 +37,8 @@ const TestSidebar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    // <div className="min-h-screen bg-gray-100">
+    <div>
       {/* Header */}
       <header className="bg-white shadow-md fixed w-full z-10">
         <div className="flex items-center justify-between px-4 py-3">
@@ -156,7 +137,8 @@ const TestSidebar = () => {
             isSidebarOpen ? "lg:ml-64" : "lg:ml-20"
           }`}
         >
-          <HomeContent />
+          {mainContent}
+          {/* <HomeContent /> */}
         </main>
       </div>
     </div>

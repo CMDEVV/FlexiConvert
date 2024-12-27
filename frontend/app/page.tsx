@@ -1,5 +1,12 @@
+import HomeContent from "@/components/HomeContent";
+import TestSidebar from "@/components/TestSidebar";
 import Image from "next/image";
 
 export default function Home() {
-  return <main>{/* <h1>Home</h1> */}</main>;
+  return (
+    <main className="container">
+      {/* <TestSidebar /> */}
+      <HomeContent />
+    </main>
+  );
 }
