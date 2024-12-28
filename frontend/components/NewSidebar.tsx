@@ -11,7 +11,7 @@ import {
   FiX,
 } from "react-icons/fi";
 
-export default function NewSidebar() {
+export default function NewSidebar({ mainContent }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState({});
@@ -39,6 +39,13 @@ export default function NewSidebar() {
 
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  const navigationItems = [
+    {
+      title: "Tools",
+      items: ["Png to Jpeg", "Jpeg to Png"],
+    },
+  ];
 
   return (
     <div className="flex">
@@ -81,48 +88,44 @@ export default function NewSidebar() {
         } lg:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
         <div className="p-4 text-lg font-bold">My Sidebar</div>
-        <ul className="mt-4 space-y-2 px-4 rounded">
+        <nav className="mt-4 space-y-2 px-4 rounded">
           {/* Home */}
-          <li className="px-4 py-2 hover:bg-gray-100 rounded">Home</li>
+          <button className=" w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+            Home
+          </button>
 
-          {/* About (Dropdown) */}
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <div
-              className="flex justify-between items-center"
-              onClick={() => toggleDropdown("about")}
-            >
-              <span>About</span>
-              <span>{dropdownOpen["about"] ? "▼" : "▶"}</span>
+          {/*(Dropdown) */}
+          {navigationItems.map((item) => (
+            <div key={item.title}>
+              <button
+                onClick={() => toggleDropdown(item.title)}
+                className={`w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition-colors ${
+                  dropdownOpen[item.title] ? "bg-gray-100" : ""
+                }`}
+              >
+                {item.title}
+
+                <FiChevronDown
+                  className={`transition-transform ${
+                    dropdownOpen[item.title] ? "rotate-180" : ""
+                  } `}
+                />
+              </button>
+              {dropdownOpen[item.title] && (
+                <div className="mt-2 ml-6 space-y-2">
+                  {item.items.map((subItem) => (
+                    <button
+                      key={subItem}
+                      className="w-full text-left p-2 rounded hover:bg-gray-100 transition-colors"
+                    >
+                      {subItem}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            {dropdownOpen["about"] && (
-              <ul className="ml-4 mt-2 space-y-1 text-sm">
-                <li className="px-4 py-1 hover:bg-gray-600">Our Team</li>
-                <li className="px-4 py-1 hover:bg-gray-600">Our History</li>
-              </ul>
-            )}
-          </li>
-
-          {/* Services (Dropdown) */}
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <div
-              className="flex justify-between items-center"
-              onClick={() => toggleDropdown("services")}
-            >
-              <span>Services</span>
-              <span>{dropdownOpen["services"] ? "▼" : "▶"}</span>
-            </div>
-            {dropdownOpen["services"] && (
-              <ul className="ml-4 mt-2 space-y-1 text-sm">
-                <li className="px-4 py-1 hover:bg-gray-600">Web Development</li>
-                <li className="px-4 py-1 hover:bg-gray-600">Mobile Apps</li>
-                <li className="px-4 py-1 hover:bg-gray-600">SEO</li>
-              </ul>
-            )}
-          </li>
-
-          {/* Contact */}
-          <li className="px-4 py-2 hover:bg-gray-700">Contact</li>
-        </ul>
+          ))}
+        </nav>
       </div>
 
       {/* Toggle Button */}
@@ -137,15 +140,16 @@ export default function NewSidebar() {
 
       {/* Main Content */}
       <div
-        className={`flex-1 p-6 transition-all duration-300 ${
+        className={`mt-20 flex-1 p-6 transition-all duration-300 ${
           isOpen || isLargeScreen ? "ml-64" : "ml-0"
         }`}
       >
-        <h1 className="text-2xl font-bold">Main Content Area</h1>
+        {mainContent}
+        {/* <h1 className="text-2xl font-bold">Main Content Area</h1>
         <p className="mt-4 text-gray-600">
           This is the main content of the page. Adjust the sidebar and dropdowns
           to see how they work.
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -14,17 +14,20 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 const tools = [
   {
     id: 1,
-    name: "All",
+    name: "Custom",
+    convertTo: "Custom",
     href: "#",
   },
   {
     id: 2,
     name: "Png To Jpeg",
+    convertTo: "Jpeg",
     href: "#",
   },
   {
     id: 3,
     name: "Jpeg To Png",
+    convertTo: "Png",
     href: "#",
   },
 ];

@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NewSidebar />
+        <NewSidebar mainContent={children} />
         {/* <TestSidebar mainContent={children} /> */}
         {/* {children} */}
       </body>
