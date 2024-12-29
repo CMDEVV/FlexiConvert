@@ -3,8 +3,23 @@
 import { useState, useRef } from "react";
 import { FiUpload, FiFile } from "react-icons/fi";
 import { AiOutlineFile, AiOutlineClose } from "react-icons/ai";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+// import { useRouter } from "next/router";
 
-function UploadFiles() {
+// type Props = {
+//   param: MyData;
+// };
+
+// type MyData = {
+//   id: number;
+//   name: string;
+//   convertFrom: string;
+//   convertTo: string;
+// };
+
+function UploadFiles({ data }) {
+  console.log("ParmsForUpload", data.convertFrom);
+
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -42,7 +57,7 @@ function UploadFiles() {
     const files = Array.from(e.target.files);
     const updatedFiles = files.map((file) => ({
       file,
-      isValid: file.type === "image/png",
+      isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
     }));
     setSelectedFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
     setError(null); // Clear previous errors
@@ -64,6 +79,10 @@ function UploadFiles() {
     const updatedFiles = selectedFiles.filter((_, i) => i !== index);
     setSelectedFiles(updatedFiles);
   };
+
+  // if (!router.isReady) {
+  //   return <p> Loading...</p>;
+  // }
 
   return (
     // <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -113,15 +132,17 @@ function UploadFiles() {
               {selectedFiles.map(({ file, isValid }, index) => (
                 <div
                   key={index}
-                  className={`flex items-center p-4 rounded-lg transition-colors duration-150 ${
-                    isValid ? "bg-gray-50" : "border-2 border-red-500"
+                  className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
+                    isValid ? "" : "border-2 border-red-500"
                   }`}
                 >
                   <FiFile className="text-gray-500 w-6 h-6 mr-3" />
                   {/* <div className="flex-1"> */}
                   <div className="flex-1">
                     <span className="text-sm text-red-500">
-                      {isValid ? "" : "Only PNG files are allowed"}
+                      {isValid
+                        ? ""
+                        : `Only ${data.convertFrom} files are allowed`}
                     </span>
                     <p className="text-sm font-medium text-gray-900">
                       {file.name}
@@ -130,8 +151,8 @@ function UploadFiles() {
                       {formatFileSize(file.size)}
                     </p>
                   </div>
-
-                  {/* <span className="flex-1"> Convert to Png</span> */}
+                  <ArrowRightIcon className="h-4" />
+                  <span className="flex-1 ml-10">{data.convertTo}</span>
 
                   <button
                     onClick={() => removeFile(index)}
