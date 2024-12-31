@@ -17,41 +17,34 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 //   convertTo: string;
 // };
 
+const convertImages = async (images) => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/convert-file/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ images }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error converting images", error);
+  }
+};
+
 function UploadFiles({ data }) {
   console.log("ParmsForUpload", data.convertFrom);
 
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
-
-  // const handleFileSelect = (e) => {
-  //   const files = Array.from(e.target.files);
-  //   setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
-  // };
-
-  // Need to grab the type of image to convert string()
-
-  // const handleFileSelect = (e) => {
-  //   const files = Array.from(e.target.files);
-  //   const validFiles = [];
-  //   let inValidFileFound = false;
-
-  //   files.forEach((file) => {
-  //     if (file.type === "image/png") {
-  //       validFiles.push(file);
-  //     } else {
-  //       inValidFileFound = true;
-  //     }
-  //   });
-
-  //   if (inValidFileFound) {
-  //     setError("Only PNG files are allowed");
-  //   } else {
-  //     setError(null);
-  //   }
-
-  //   setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
-  // };
+  const [loading, setLoading] = useState(false);
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -59,9 +52,16 @@ function UploadFiles({ data }) {
       file,
       isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
     }));
+
     setSelectedFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
     setError(null); // Clear previous errors
   };
+
+  // const handleFileChange = (event) => {
+  //   const files = Array.from(event.target.files); // Convert FileList to array of File objects
+  //   console.log("Selected files:", files); // Debug: should log an array of File objects
+  //   setSelectedFiles(files); // Update state with File objects directly
+  // };
 
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -75,10 +75,99 @@ function UploadFiles({ data }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
+  // Convert selected files to Base64
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      console.log("Converting file:", file); // Log the file
+      if (!file || !(file instanceof Blob)) {
+        reject(new Error("Invalid file type. Expected a Blob or File object."));
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(",")[1]); // Remove Base64 prefix
+      reader.onerror = (error) => reject(error);
+    });
+
+  // Download a file
+  const downloadFile = (base64Data, fileName, format) => {
+    const link = document.createElement("a");
+    link.href = `data:image/${format.toLowerCase()};base64,${base64Data}`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Handle form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      if (!selectedFiles || selectedFiles.length === 0) {
+        throw new Error("No files selected for conversion.");
+      }
+
+      const images = await Promise.all(
+        selectedFiles.map(async ({ file, isValid }) => {
+          // Validate file type
+          if (!isValid) {
+            console.error("Invalid file type:", file.name);
+            throw new Error(`Invalid file type for ${file.name}.`);
+          }
+
+          // Convert the valid file to Base64
+          const base64Image = await convertToBase64(file);
+          return {
+            conversion_type:
+              file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
+            image: base64Image,
+            quality: 80,
+          };
+        })
+      );
+
+      // Call the API
+      const response = await fetch("http://localhost:8000/api/convert-file/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ images }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to convert images");
+      }
+
+      const result = await response.json();
+      // Automatically download converted images
+      result.results.forEach((img, index) => {
+        if (img.image) {
+          const fileName = `converted_image_${
+            index + 1
+          }.${img.format.toLowerCase()}`;
+          downloadFile(img.image, fileName, img.format);
+        } else {
+          console.error(`Error for image ${index + 1}: ${img.error}`);
+        }
+      });
+    } catch (error) {
+      console.error("Error during image conversion:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const removeFile = (index) => {
     const updatedFiles = selectedFiles.filter((_, i) => i !== index);
     setSelectedFiles(updatedFiles);
   };
+
+  // Determine if all selected files are valid
+  const allFilesMatch = selectedFiles.every(({ isValid }) => isValid);
 
   // if (!router.isReady) {
   //   return <p> Loading...</p>;
@@ -98,6 +187,7 @@ function UploadFiles({ data }) {
               <input
                 type="file"
                 multiple
+                accept="image/png, image/jpeg"
                 className="hidden"
                 onChange={handleFileSelect}
                 ref={fileInputRef}
@@ -120,7 +210,15 @@ function UploadFiles({ data }) {
                 Selected Files ({selectedFiles.length})
               </h3>
 
-              <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+              <button
+                disabled={!allFilesMatch}
+                onClick={handleSubmit}
+                className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${
+                  allFilesMatch
+                    ? "text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
                 Convert Files
               </button>
             </div>

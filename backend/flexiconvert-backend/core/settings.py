@@ -37,6 +37,9 @@ CORS_ALLOWED_ORIGINS = [
     env.str("CORS_ALLOWED_ORIGINS") 
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    env.str("CSRF_TRUSTED_ORIGINS")
+]
 
 # Application definition
 
