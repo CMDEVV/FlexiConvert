@@ -96,7 +96,13 @@ function UploadFiles({ data }) {
     });
 
   // Download a file
+
   const downloadFile = (base64Data, fileName, format) => {
+    if (!base64Data) {
+      alert("No converted image to download.");
+      return;
+    }
+
     const link = document.createElement("a");
     link.href = `data:image/${format.toLowerCase()};base64,${base64Data}`;
     link.download = fileName;
@@ -104,6 +110,14 @@ function UploadFiles({ data }) {
     link.click();
     document.body.removeChild(link);
   };
+  // const downloadFile = (base64Data, fileName, format) => {
+  //   const link = document.createElement("a");
+  //   link.href = `data:image/${format.toLowerCase()};base64,${base64Data}`;
+  //   link.download = fileName;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
   // Handle form submission
   const handleSubmit = async (event) => {
@@ -285,7 +299,16 @@ function UploadFiles({ data }) {
                       <span>Preview</span>
                     </Button> */}
 
-                      <Button variant="outline">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          downloadFile(
+                            convertedImage,
+                            `${file.name.split(".")[0]}.${convertedFormat}`,
+                            convertedFormat
+                          )
+                        }
+                      >
                         <Download />
                         <span>Download</span>
                       </Button>
