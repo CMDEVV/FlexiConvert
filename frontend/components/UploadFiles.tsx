@@ -4,6 +4,10 @@ import { useState, useRef } from "react";
 import { FiUpload, FiFile } from "react-icons/fi";
 import { AiOutlineFile, AiOutlineClose } from "react-icons/ai";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { ConvertDropdown } from "./ConvertDropdown";
+import { Button } from "@/components/ui/button";
+import { Trash2, Eye, Download } from "lucide-react";
+import { ImagePopup } from "./ImagePopup";
 // import { useRouter } from "next/router";
 
 // type Props = {
@@ -51,6 +55,7 @@ function UploadFiles({ data }) {
     const updatedFiles = files.map((file) => ({
       file,
       isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
+      // image: [],
     }));
 
     setSelectedFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
@@ -111,7 +116,7 @@ function UploadFiles({ data }) {
       }
 
       const images = await Promise.all(
-        selectedFiles.map(async ({ file, isValid }) => {
+        selectedFiles.map(async ({ file, isValid, image }) => {
           // Validate file type
           if (!isValid) {
             console.error("Invalid file type:", file.name);
@@ -143,17 +148,29 @@ function UploadFiles({ data }) {
       }
 
       const result = await response.json();
+      console.log("DataResult", result.results[0]?.image);
+      // Update `selectedFiles` with the converted images
+      const updatedFiles = selectedFiles.map((fileObj, index) => ({
+        ...fileObj,
+        convertedImage: result.results[index]?.image || null,
+        convertedFormat: result.results[index]?.format?.toLowerCase() || null,
+      }));
+      setSelectedFiles(updatedFiles);
+
+      console.log("UploadFilesResult", result);
+      console.log("SelectedFilesAfterUpload", selectedFiles);
+
       // Automatically download converted images
-      result.results.forEach((img, index) => {
-        if (img.image) {
-          const fileName = `converted_image_${
-            index + 1
-          }.${img.format.toLowerCase()}`;
-          downloadFile(img.image, fileName, img.format);
-        } else {
-          console.error(`Error for image ${index + 1}: ${img.error}`);
-        }
-      });
+      // result.results.forEach((img, index) => {
+      //   if (img.image) {
+      //     const fileName = `converted_image_${
+      //       index + 1
+      //     }.${img.format.toLowerCase()}`;
+      //     downloadFile(img.image, fileName, img.format);
+      //   } else {
+      //     console.error(`Error for image ${index + 1}: ${img.error}`);
+      //   }
+      // });
     } catch (error) {
       console.error("Error during image conversion:", error);
     } finally {
@@ -169,6 +186,7 @@ function UploadFiles({ data }) {
   // Determine if all selected files are valid
   const allFilesMatch = selectedFiles.every(({ isValid }) => isValid);
 
+  console.log("AllSelectedImages", selectedFiles);
   // if (!router.isReady) {
   //   return <p> Loading...</p>;
   // }
@@ -210,60 +228,81 @@ function UploadFiles({ data }) {
                 Selected Files ({selectedFiles.length})
               </h3>
 
-              <button
-                disabled={!allFilesMatch}
-                onClick={handleSubmit}
-                className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${
-                  allFilesMatch
-                    ? "text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Convert Files
-              </button>
+              <div className="space-x-3">
+                <Button className="text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                  Download All
+                </Button>
+
+                <Button
+                  disabled={!allFilesMatch}
+                  onClick={handleSubmit}
+                  className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${
+                    allFilesMatch
+                      ? "text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  Convert Files
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-3 mt-10">
               {error && <p className="mt-2 text-md text-red-500">{error}</p>}
 
-              {/* {selectedFiles.map((file, index) => ( */}
-              {selectedFiles.map(({ file, isValid }, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
-                    isValid ? "" : "border-2 border-red-500"
-                  }`}
-                >
-                  <FiFile className="text-gray-500 w-6 h-6 mr-3" />
-                  {/* <div className="flex-1"> */}
-                  <div className="flex-1">
-                    <span className="text-sm text-red-500">
-                      {isValid
-                        ? ""
-                        : `Only ${data.convertFrom} files are allowed`}
-                    </span>
-                    <p className="text-sm font-medium text-gray-900">
-                      {file.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {formatFileSize(file.size)}
-                    </p>
-                  </div>
-                  <ArrowRightIcon className="h-4" />
-                  <span className="flex-1 ml-10">{data.convertTo}</span>
-
-                  <button
-                    onClick={() => removeFile(index)}
-                    className="p-1.5 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-200"
+              {selectedFiles.map(
+                ({ file, isValid, convertedImage, convertedFormat }, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
+                      isValid ? "" : "border-2 border-red-500"
+                    }`}
                   >
-                    <AiOutlineClose className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              ))}
+                    <FiFile className="text-gray-500 w-6 h-6 mr-3" />
+                    {/* <div className="flex-1"> */}
+                    <div className="flex-1">
+                      <span className="text-sm text-red-500">
+                        {isValid
+                          ? ""
+                          : `Only ${data.convertFrom} files are allowed`}
+                      </span>
+                      <p className="text-sm font-medium text-gray-900">
+                        {file.name}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {formatFileSize(file.size)}
+                      </p>
+                    </div>
+                    <ArrowRightIcon className="h-4" />
+                    <span className="flex-1 ml-10">
+                      <ConvertDropdown data={data.convertTo} />
+                    </span>
+
+                    <div className="flex space-x-1 items-center">
+                      <ImagePopup data={{ convertedImage, convertedFormat }} />
+                      {/* <Button variant="outline">
+                      <Eye />
+                      <span>Preview</span>
+                    </Button> */}
+
+                      <Button variant="outline">
+                        <Download />
+                        <span>Download</span>
+                      </Button>
+                      <Button
+                        onClick={() => removeFile(index)}
+                        variant="outline"
+                        size="icon"
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  </div>
+                )
+              )}
             </div>
           </div>
         )}
-        {/* </div> */}
       </div>
     </div>
   );

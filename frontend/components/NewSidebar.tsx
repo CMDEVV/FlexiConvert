@@ -11,6 +11,8 @@ import {
   FiX,
 } from "react-icons/fi";
 
+import Link from "next/link";
+
 export default function NewSidebar({ mainContent }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -52,16 +54,6 @@ export default function NewSidebar({ mainContent }) {
       <header className="bg-white shadow-md fixed w-full z-10">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded-lg hover:bg-gray-100 lg:hidden"
-            >
-              {isOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
-            </button>
             <div className="flex items-center space-x-2">
               <img
                 src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9"
@@ -90,9 +82,12 @@ export default function NewSidebar({ mainContent }) {
         <div className="p-4 text-lg font-bold">My Sidebar</div>
         <nav className="mt-4 space-y-2 px-4 rounded">
           {/* Home */}
-          <button className=" w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
-            Home
-          </button>
+
+          <Link href="/">
+            <button className=" w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
+              Home
+            </button>
+          </Link>
 
           {/*(Dropdown) */}
           {navigationItems.map((item) => (
