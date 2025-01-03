@@ -21,7 +21,7 @@ export function ImagePopup({ data }) {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Eye />
-          <span>Preview</span>
+          {/* <span>Preview</span> */}
         </Button>
         {/* <Button variant="outline">Share</Button> */}
       </DialogTrigger>

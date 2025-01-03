@@ -49,6 +49,7 @@ function UploadFiles({ data }) {
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState({});
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -95,22 +96,61 @@ function UploadFiles({ data }) {
       reader.onerror = (error) => reject(error);
     });
 
-  // Download a file
+  // Download All
+  const downloadAllFiles = () => {
+    // Filter out files that haven't been converted
+    const convertedFiles = selectedFiles.filter((file) => file.convertedImage);
 
-  const downloadFile = (base64Data, fileName, format) => {
+    if (convertedFiles.length === 0) {
+      alert("No converted images available for download.");
+      return;
+    }
+
+    // Loop through the converted files and download each one
+    convertedFiles.forEach(
+      ({ file, convertedImage, convertedFormat }, index) => {
+        const fileName = `${file.name.split(".")[0]}.${convertedFormat}`;
+        downloadFile(convertedImage, fileName, convertedFormat);
+      }
+    );
+  };
+
+  // Download file
+  const downloadFile = (base64Data, fileName, format, index) => {
     if (!base64Data) {
       alert("No converted image to download.");
       return;
     }
 
-    const link = document.createElement("a");
-    link.href = `data:image/${format.toLowerCase()};base64,${base64Data}`;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Initialize progress for this file
+    setDownloadProgress((prev) => ({ ...prev, [index]: 0 }));
+
+    // Simulate the download progress
+    const interval = setInterval(() => {
+      setDownloadProgress((prev) => {
+        const currentProgress = prev[index] || 0;
+        if (currentProgress >= 100) {
+          clearInterval(interval);
+
+          // Trigger the actual download
+          const link = document.createElement("a");
+          link.href = `data:image/${format};base64,${base64Data}`;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+        return { ...prev, [index]: currentProgress + 20 };
+      });
+    }, 200); // Update progress every 200ms
   };
+
   // const downloadFile = (base64Data, fileName, format) => {
+  //   if (!base64Data) {
+  //     alert("No converted image to download.");
+  //     return;
+  //   }
+
   //   const link = document.createElement("a");
   //   link.href = `data:image/${format.toLowerCase()};base64,${base64Data}`;
   //   link.download = fileName;
@@ -243,7 +283,11 @@ function UploadFiles({ data }) {
               </h3>
 
               <div className="space-x-3">
-                <Button className="text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                <Button
+                  className="text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                  onClick={downloadAllFiles}
+                  disabled={!selectedFiles.some((file) => file.convertedImage)}
+                >
                   Download All
                 </Button>
 
@@ -266,60 +310,77 @@ function UploadFiles({ data }) {
 
               {selectedFiles.map(
                 ({ file, isValid, convertedImage, convertedFormat }, index) => (
-                  <div
-                    key={index}
-                    className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
-                      isValid ? "" : "border-2 border-red-500"
-                    }`}
-                  >
-                    <FiFile className="text-gray-500 w-6 h-6 mr-3" />
-                    {/* <div className="flex-1"> */}
-                    <div className="flex-1">
-                      <span className="text-sm text-red-500">
-                        {isValid
-                          ? ""
-                          : `Only ${data.convertFrom} files are allowed`}
+                  <div>
+                    <div
+                      key={index}
+                      className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
+                        isValid ? "" : "border-2 border-red-500"
+                      }`}
+                    >
+                      <FiFile className="text-gray-500 w-6 h-6 mr-3" />
+                      {/* <div className="flex-1"> */}
+                      <div className="flex-1">
+                        <span className="text-sm text-red-500">
+                          {isValid
+                            ? ""
+                            : `Only ${data.convertFrom} files are allowed`}
+                        </span>
+                        <p className="text-sm font-medium text-gray-900">
+                          {file.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {formatFileSize(file.size)}
+                        </p>
+                      </div>
+                      <ArrowRightIcon className="h-4" />
+                      <span className="flex-1 ml-10">
+                        <ConvertDropdown data={data.convertTo} />
                       </span>
-                      <p className="text-sm font-medium text-gray-900">
-                        {file.name}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {formatFileSize(file.size)}
-                      </p>
-                    </div>
-                    <ArrowRightIcon className="h-4" />
-                    <span className="flex-1 ml-10">
-                      <ConvertDropdown data={data.convertTo} />
-                    </span>
 
-                    <div className="flex space-x-1 items-center">
-                      <ImagePopup data={{ convertedImage, convertedFormat }} />
-                      {/* <Button variant="outline">
-                      <Eye />
-                      <span>Preview</span>
-                    </Button> */}
+                      <div className="flex space-x-1 items-center">
+                        {convertedImage && (
+                          <>
+                            <ImagePopup
+                              data={{ convertedImage, convertedFormat }}
+                            />
 
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          downloadFile(
-                            convertedImage,
-                            `${file.name.split(".")[0]}.${convertedFormat}`,
-                            convertedFormat
-                          )
-                        }
-                      >
-                        <Download />
-                        <span>Download</span>
-                      </Button>
-                      <Button
-                        onClick={() => removeFile(index)}
-                        variant="outline"
-                        size="icon"
-                      >
-                        <Trash2 />
-                      </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                downloadFile(
+                                  convertedImage,
+                                  `${
+                                    file.name.split(".")[0]
+                                  }.${convertedFormat}`,
+                                  convertedFormat,
+                                  index // Pass the index
+                                )
+                              }
+                            >
+                              <Download />
+                              {/* <span>Download</span> */}
+                            </Button>
+                          </>
+                        )}
+
+                        <Button
+                          onClick={() => removeFile(index)}
+                          variant="outline"
+                          size="icon"
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
                     </div>
+                    {/* Progress Bar */}
+                    {downloadProgress[index] > 0 && (
+                      <div className="w-full h-2 bg-gray-200 rounded-lg overflow-hidden">
+                        <div
+                          className="h-full bg-blue-500 transition-all duration-150"
+                          style={{ width: `${downloadProgress[index]}%` }}
+                        ></div>
+                      </div>
+                    )}
                   </div>
                 )
               )}

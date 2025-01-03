@@ -73,8 +73,8 @@ def convert_image(request):
 
                     # Optionally save the file (local server-side debugging)
                     file_name = f"converted_image_{len(results) + 1}.{output_format.lower()}"
-                    with open(file_name, "wb") as file:
-                        file.write(base64.b64decode(result_image))
+                    # with open(file_name, "wb") as file:
+                    #     file.write(base64.b64decode(result_image))
 
                     # Append the result to the results list
                     results.append({
