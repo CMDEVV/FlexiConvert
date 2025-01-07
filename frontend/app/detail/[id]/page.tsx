@@ -4,6 +4,15 @@ import React from "react";
 import { useParams } from "next/navigation";
 import { tools } from "@/components/Card";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
 // export async function getServerSideProps(context) {
 //   const { id } = context.params;
 //   const { name, convertFrom, convertTo } = context.query;
@@ -33,7 +42,24 @@ function Page() {
   console.log(data);
   return (
     <div>
-      {/* <h1>ID: {id}</h1> */}
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbPage>
+              {data[0].name !== "Custom"
+                ? `${data[0].convertFrom} to ${data[0].convertTo}`
+                : data[0].convertTo}
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      {/* Upload Component */}
       <UploadFiles data={data[0]} />
     </div>
   );
