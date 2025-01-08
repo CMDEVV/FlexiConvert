@@ -43,15 +43,11 @@ const convertImages = async (images) => {
 };
 
 function UploadFiles({ data }) {
-  console.log("ParmsForUpload", data.convertFrom);
-
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState({});
-  const [conversionProgress, setConversionProgress] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -64,12 +60,6 @@ function UploadFiles({ data }) {
     setSelectedFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
     setError(null); // Clear previous errors
   };
-
-  // const handleFileChange = (event) => {
-  //   const files = Array.from(event.target.files); // Convert FileList to array of File objects
-  //   console.log("Selected files:", files); // Debug: should log an array of File objects
-  //   setSelectedFiles(files); // Update state with File objects directly
-  // };
 
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -117,36 +107,6 @@ function UploadFiles({ data }) {
     );
   };
 
-  // Download file
-  // const downloadFile = (base64Data, fileName, format, index) => {
-  //   if (!base64Data) {
-  //     alert("No converted image to download.");
-  //     return;
-  //   }
-
-  //   // Initialize progress for this file
-  //   setDownloadProgress((prev) => ({ ...prev, [index]: 0 }));
-
-  //   // Simulate the download progress
-  //   const interval = setInterval(() => {
-  //     setDownloadProgress((prev) => {
-  //       const currentProgress = prev[index] || 0;
-  //       if (currentProgress >= 100) {
-  //         clearInterval(interval);
-
-  //         // Trigger the actual download
-  //         const link = document.createElement("a");
-  //         link.href = `data:image/${format};base64,${base64Data}`;
-  //         link.download = fileName;
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //       }
-  //       return { ...prev, [index]: currentProgress + 20 };
-  //     });
-  //   }, 200); // Update progress every 200ms
-  // };
-
   const downloadFile = (base64Data, fileName, format) => {
     if (!base64Data) {
       alert("No converted image to download.");
@@ -165,59 +125,48 @@ function UploadFiles({ data }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    setConversionProgress(0);
-    setIsComplete(false); // Reset completion status
+    setProgress(0);
 
     try {
-      if (!selectedFiles || selectedFiles.length === 0) {
-        throw new Error("No files selected for conversion.");
+      const filesToConvert = selectedFiles.filter(
+        (file) => !file.convertedImage
+      );
+      const totalFiles = filesToConvert.length;
+
+      if (totalFiles === 0) {
+        alert("All selected files have already been converted.");
+        setLoading(false);
+        return;
       }
 
-      const totalFiles = selectedFiles.length;
-      const updatedFiles = [...selectedFiles]; // copy of update errors
-
       const images = await Promise.all(
-        selectedFiles.map(async ({ file, isValid, image }, index) => {
-          // Validate file type
+        filesToConvert.map(async ({ file, isValid }, index) => {
           if (!isValid) {
-            console.error("Invalid file type:", file.name);
             throw new Error(`Invalid file type for ${file.name}.`);
           }
 
-          try {
-            // Convert the valid file to Base64
-            const base64Image = await convertToBase64(file);
-            setConversionProgress(((index + 1) / totalFiles) * 100);
-            updatedFiles[index].conversionError = null; // Clear previous error if any
-            return {
-              conversion_type:
-                file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
-              image: base64Image,
-              quality: 80,
-            };
-          } catch (error) {
-            updatedFiles[
-              index
-            ].conversionError = `Failed to process ${file.name}.`;
-            return null;
-          }
+          // Convert the valid file to Base64
+          const base64Image = await convertToBase64(file);
+          // Update progress after each successful conversion
+          setProgress(((index + 1) / totalFiles) * 100);
+
+          return {
+            originalFile: file,
+            conversion_type:
+              file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
+            image: base64Image,
+            quality: 80,
+          };
         })
       );
 
-      // Filter out null values (failed conversions) before sending the API request
-      const validImages = images.filter((img) => img !== null);
-
-      if (validImages.length === 0) {
-        throw new Error("All files failed to process.");
-      }
       // Call the API
       const response = await fetch("http://localhost:8000/api/convert-file/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({ images }),
-        body: JSON.stringify({ validImages }),
+        body: JSON.stringify({ images }),
       });
 
       if (!response.ok) {
@@ -225,31 +174,28 @@ function UploadFiles({ data }) {
       }
 
       const result = await response.json();
-      console.log("DataResult", result.results[0]?.image);
-      // Update `selectedFiles` with the converted images
-      // const updatedFiles = selectedFiles.map((fileObj, index) => ({
-      //   ...fileObj,
-      //   convertedImage: result.results[index]?.image || null,
-      //   convertedFormat: result.results[index]?.format?.toLowerCase() || null,
-      // }));
-      updatedFiles.forEach((fileObj, index) => {
-        if (result.results[index]) {
-          fileObj.convertedImage = result.results[index]?.image || null;
-          fileObj.convertedFormat =
-            result.results[index]?.format?.toLowerCase() || null;
+
+      // Update `selectedFiles` with the converted images and mark them as converted
+      const updatedFiles = selectedFiles.map((fileObj, index) => {
+        const convertedResult = result.results.find(
+          (res, resIndex) =>
+            fileObj.file.name === images[resIndex].originalFile.name
+        );
+        if (convertedResult) {
+          return {
+            ...fileObj,
+            convertedImage: convertedResult.image || null,
+            convertedFormat: convertedResult.format?.toLowerCase() || null,
+            converted: true, // Mark as converted
+          };
         }
+        return fileObj;
       });
-
       setSelectedFiles(updatedFiles);
-      setIsComplete(true); // Set completion status to true
-
-      console.log("UploadFilesResult", result);
-      console.log("SelectedFilesAfterUpload", selectedFiles);
     } catch (error) {
       console.error("Error during image conversion:", error);
     } finally {
       setLoading(false);
-      setConversionProgress(100);
     }
   };
 
@@ -260,11 +206,6 @@ function UploadFiles({ data }) {
 
   // Determine if all selected files are valid
   const allFilesMatch = selectedFiles.every(({ isValid }) => isValid);
-
-  console.log("AllSelectedImages", selectedFiles);
-  // if (!router.isReady) {
-  //   return <p> Loading...</p>;
-  // }
 
   return (
     // <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -293,6 +234,8 @@ function UploadFiles({ data }) {
                 <FiUpload className="mr-2" />
                 Upload Files
               </button>
+
+              <h3 className="mt-4">Max file size 20MB</h3>
             </div>
           </div>
         </div>
@@ -331,13 +274,7 @@ function UploadFiles({ data }) {
 
               {selectedFiles.map(
                 (
-                  {
-                    file,
-                    isValid,
-                    convertedImage,
-                    convertedFormat,
-                    conversionError,
-                  },
+                  { file, isValid, convertedImage, convertedFormat, converted },
                   index
                 ) => (
                   <div key={index}>
@@ -361,13 +298,10 @@ function UploadFiles({ data }) {
                           {formatFileSize(file.size)}
                         </p>
                       </div>
-                      {conversionError && (
-                        <p className="text-sm text-red-500 mt-1">
-                          <strong>Error:</strong> {conversionError}
-                        </p>
-                      )}
-                      <ArrowRightIcon className="h-4" />
-                      <span className="flex-1 ml-10">
+
+                      {/* <ArrowRightIcon className="h-4" /> */}
+                      <span>Convert to:</span>
+                      <span className="flex-1 ml-1">
                         <ConvertDropdown data={data.convertTo} />
                       </span>
 
@@ -406,24 +340,23 @@ function UploadFiles({ data }) {
                       </div>
                     </div>
                     {/* Progress Bar */}
-                    {/* Progress Bar */}
-                    {/* Progress Bar */}
-                    {conversionProgress > 0 && (
-                      <div className="w-full h-1 bg-gray-200 rounded overflow-hidden ">
+                    {converted ? (
+                      <div className="w-full bg-gray-200 rounded h-1">
                         <div
-                          className={`h-full transition-all duration-150 ${
-                            isComplete ? "bg-green-500" : "bg-blue-500"
+                          className={`h-1 rounded-full transition-all duration-300 ${
+                            progress === 100 ? "bg-green-500" : "bg-blue-500"
                           }`}
-                          style={{ width: `${conversionProgress}%` }}
+                          style={{ width: `${progress}%` }}
                         ></div>
                       </div>
+                    ) : (
+                      <></>
                     )}
-
-                    {isComplete && (
+                    {/* {isComplete && (
                       <p className="text-sm text-green-600 mt-2">
                         Conversion Complete!
                       </p>
-                    )}
+                    )} */}
                   </div>
                 )
               )}
@@ -436,3 +369,33 @@ function UploadFiles({ data }) {
 }
 
 export default UploadFiles;
+
+// Download file
+// const downloadFile = (base64Data, fileName, format, index) => {
+//   if (!base64Data) {
+//     alert("No converted image to download.");
+//     return;
+//   }
+
+//   // Initialize progress for this file
+//   setDownloadProgress((prev) => ({ ...prev, [index]: 0 }));
+
+//   // Simulate the download progress
+//   const interval = setInterval(() => {
+//     setDownloadProgress((prev) => {
+//       const currentProgress = prev[index] || 0;
+//       if (currentProgress >= 100) {
+//         clearInterval(interval);
+
+//         // Trigger the actual download
+//         const link = document.createElement("a");
+//         link.href = `data:image/${format};base64,${base64Data}`;
+//         link.download = fileName;
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//       }
+//       return { ...prev, [index]: currentProgress + 20 };
+//     });
+//   }, 200); // Update progress every 200ms
+// };
