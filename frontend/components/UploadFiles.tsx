@@ -6,8 +6,9 @@ import { AiOutlineFile, AiOutlineClose } from "react-icons/ai";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { ConvertDropdown } from "./ConvertDropdown";
 import { Button } from "@/components/ui/button";
-import { Trash2, Eye, Download } from "lucide-react";
+import { Trash2, Eye, Download, Pencil } from "lucide-react";
 import { ImagePopup } from "./ImagePopup";
+import { EditImage } from "./EditImage";
 // import { useRouter } from "next/router";
 
 // type Props = {
@@ -306,12 +307,11 @@ function UploadFiles({ data }) {
                       </span>
 
                       <div className="flex space-x-1 items-center">
-                        {convertedImage && (
+                        {convertedImage ? (
                           <>
                             <ImagePopup
                               data={{ convertedImage, convertedFormat }}
                             />
-
                             <Button
                               variant="outline"
                               onClick={() =>
@@ -328,7 +328,33 @@ function UploadFiles({ data }) {
                               {/* <span>Download</span> */}
                             </Button>
                           </>
+                        ) : (
+                          <>
+                            <EditImage />
+                          </>
                         )}
+                        {/* {convertedImage && (
+                          <>
+                            <ImagePopup
+                              data={{ convertedImage, convertedFormat }}
+                            />
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                downloadFile(
+                                  convertedImage,
+                                  `${
+                                    file.name.split(".")[0]
+                                  }.${convertedFormat}`,
+                                  convertedFormat
+                                )
+                              }
+                            >
+                              <Download />
+                            
+                            </Button>
+                          </>
+                        ) } */}
 
                         <Button
                           onClick={() => removeFile(index)}

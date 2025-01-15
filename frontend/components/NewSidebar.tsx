@@ -63,13 +63,13 @@ export default function NewSidebar({ mainContent }) {
               <span className="text-xl font-bold">FlexiConvert</span>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <img
               src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
               alt="User"
               className="w-8 h-8 rounded-full cursor-pointer"
             />
-          </div>
+          </div> */}
         </div>
       </header>
 
