@@ -45,7 +45,21 @@ export default function NewSidebar({ mainContent }) {
   const navigationItems = [
     {
       title: "Tools",
-      items: ["Png to Jpeg", "Jpeg to Png"],
+      items: [
+        {
+          id: 1,
+          name: "Custom",
+        },
+        {
+          id: 2,
+          name: "Png to Jpeg",
+        },
+        {
+          id: 3,
+          name: "Jpeg to Png",
+        },
+      ],
+      // items: ["Png to Jpeg", "Jpeg to Png"],
     },
   ];
 
@@ -109,12 +123,11 @@ export default function NewSidebar({ mainContent }) {
               {dropdownOpen[item.title] && (
                 <div className="mt-2 ml-6 space-y-2">
                   {item.items.map((subItem) => (
-                    <button
-                      key={subItem}
-                      className="w-full text-left p-2 rounded hover:bg-gray-100 transition-colors"
-                    >
-                      {subItem}
-                    </button>
+                    <Link key={subItem.id} href={`/detail/${subItem.id}`}>
+                      <button className="w-full text-left p-2 rounded hover:bg-gray-100 transition-colors">
+                        {subItem.name}
+                      </button>
+                    </Link>
                   ))}
                 </div>
               )}

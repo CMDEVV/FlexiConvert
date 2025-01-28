@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Eye, Download, Pencil } from "lucide-react";
 import { ImagePopup } from "./ImagePopup";
 import { EditImage } from "./EditImage";
+import ImageConversionPopup from "./ImageConversionPopup";
 // import { useRouter } from "next/router";
 
 // type Props = {
@@ -49,6 +50,13 @@ function UploadFiles({ data }) {
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [fileToEdit, setFileToEdit] = useState(null);
+
+  const openPopup = (fileIndex) => {
+    setFileToEdit(fileIndex);
+    setIsPopupOpen(true);
+  };
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -141,26 +149,34 @@ function UploadFiles({ data }) {
       }
 
       const images = await Promise.all(
-        filesToConvert.map(async ({ file, isValid }, index) => {
-          if (!isValid) {
-            throw new Error(`Invalid file type for ${file.name}.`);
+        filesToConvert.map(
+          async (
+            { file, isValid, customQuality, customWidth, customHeight },
+            index
+          ) => {
+            if (!isValid) {
+              throw new Error(`Invalid file type for ${file.name}.`);
+            }
+
+            // Convert the valid file to Base64
+            const base64Image = await convertToBase64(file);
+            // Update progress after each successful conversion
+            setProgress(((index + 1) / totalFiles) * 100);
+
+            return {
+              originalFile: file,
+              conversion_type:
+                file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
+              image: base64Image,
+              quality: customQuality || 90,
+              width: customWidth || undefined,
+              height: customHeight || undefined,
+            };
           }
-
-          // Convert the valid file to Base64
-          const base64Image = await convertToBase64(file);
-          // Update progress after each successful conversion
-          setProgress(((index + 1) / totalFiles) * 100);
-
-          return {
-            originalFile: file,
-            conversion_type:
-              file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
-            image: base64Image,
-            quality: 80,
-          };
-        })
+        )
       );
 
+      console.log("convertedImagesData", images);
       // Call the API
       const response = await fetch("http://localhost:8000/api/convert-file/", {
         method: "POST",
@@ -175,6 +191,8 @@ function UploadFiles({ data }) {
       }
 
       const result = await response.json();
+
+      console.log("resultOFData", result);
 
       // Update `selectedFiles` with the converted images and mark them as converted
       const updatedFiles = selectedFiles.map((fileObj, index) => {
@@ -207,6 +225,18 @@ function UploadFiles({ data }) {
 
   // Determine if all selected files are valid
   const allFilesMatch = selectedFiles.every(({ isValid }) => isValid);
+
+  const updateFileSettings = (fileIndex, quality, width, height) => {
+    const updatedFiles = [...selectedFiles];
+    updatedFiles[fileIndex] = {
+      ...updatedFiles[fileIndex],
+      customQuality: quality,
+      customWidth: width,
+      customHeight: height,
+    };
+    setSelectedFiles(updatedFiles);
+    setIsPopupOpen(false); // Close popup after updating
+  };
 
   return (
     // <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -330,7 +360,38 @@ function UploadFiles({ data }) {
                           </>
                         ) : (
                           <>
-                            <EditImage />
+                            {/* <Button
+                              variant="outline"
+                              onClick={() => openPopup(index)}
+                            >
+                              Edit Image
+                            </Button>
+                            {isPopupOpen && fileToEdit !== null && (
+                              <ImageConversionPopup
+                                file={selectedFiles[fileToEdit]}
+                                onSave={(quality, width, height) =>
+                                  updateFileSettings(
+                                    fileToEdit,
+                                    quality,
+                                    width,
+                                    height
+                                  )
+                                }
+                                onClose={() => setIsPopupOpen(false)}
+                              />
+                            )} */}
+                            <EditImage
+                              file={selectedFiles[index]}
+                              onSave={(quality, width, height) =>
+                                updateFileSettings(
+                                  index,
+                                  quality,
+                                  width,
+                                  height
+                                )
+                              }
+                              onClose={() => setIsPopupOpen(false)}
+                            />
                           </>
                         )}
                         {/* {convertedImage && (

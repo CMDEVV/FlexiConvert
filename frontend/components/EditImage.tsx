@@ -14,10 +14,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 
-export function EditImage() {
+export function EditImage({ file, onSave, onClose }) {
+  console.log(file);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [quality, setQuality] = useState(file.customQuality || 80);
+  const [width, setWidth] = useState(file.customWidth);
+  const [height, setHeight] = useState(file.customHeight);
   const [value, setValue] = useState("");
+
   const min = 0;
   const max = 100;
+
+  const handleSave = () => {
+    onSave(quality, width, height);
+
+    setIsOpen(false);
+    console.log("CLickingONSAVE", quality, width, height);
+  };
 
   const handleChange = (e) => {
     let newValue = parseInt(e.target.value, 10);
@@ -30,10 +44,11 @@ export function EditImage() {
       setValue(newValue);
     }
   };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
           <Pencil />
         </Button>
       </DialogTrigger>
@@ -49,32 +64,43 @@ export function EditImage() {
             <Label htmlFor="width" className="text-right">
               Width (px)
             </Label>
-            <Input type="number" id="width" className="col-span-3" />
+            <Input
+              type="number"
+              id="width"
+              className="col-span-3"
+              onChange={(e) => setWidth(e.target.value)}
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="height" className="text-right">
               Height (px)
             </Label>
-            <Input type="number" id="height" className="col-span-3" />
+            <Input
+              type="number"
+              id="height"
+              className="col-span-3"
+              onChange={(e) => setHeight(e.target.value)}
+            />
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="quality" className="text-right">
-              Quality
+              Quality(1-100)
             </Label>
             <Input
               type="number"
-              min={min}
-              max={max}
-              value={value}
-              onChange={handleChange}
+              // min={min}
+              // max={max}
+              // value={value}
+              // onChange={handleChange}
+              onChange={(e) => setQuality(parseInt(e.target.value))}
               id="quality"
               className="col-span-3"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button onClick={handleSave}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
