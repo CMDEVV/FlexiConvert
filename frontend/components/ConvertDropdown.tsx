@@ -29,6 +29,7 @@ type convertTypes = {
 
 // If chosen image is jpeg than set default to png and vice versa
 // Dont need a dropdown if only 1 item is available
+// add placeholder instead eg.(...,select) for multiple images
 
 export function ConvertDropdown({ data }) {
   console.log("DropDownDataa", data);

@@ -149,6 +149,7 @@ function UploadFiles({ data }) {
       );
 
       console.log("convertedImagesData", images);
+
       // Call the API
       const response = await fetch("http://localhost:8000/api/convert-file/", {
         method: "POST",
@@ -282,7 +283,7 @@ function UploadFiles({ data }) {
                 ) => (
                   <div key={index}>
                     <div
-                      className={`flex items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
+                      className={`flex flex-col sm:flex-row sm:items-start md:items-center lg:items-center p-4 bg-gray-50 rounded-lg transition-colors duration-150 ${
                         isValid ? "" : "border-2 border-red-500"
                       }`}
                     >
@@ -302,23 +303,23 @@ function UploadFiles({ data }) {
                         </p>
                       </div>
 
-                      {/* <ArrowRightIcon className="h-4" /> */}
-                      <span>Convert to:</span>
-                      <span className="flex-1 ml-1">
-                        {data.name == "Custom" ? (
-                          <>
-                            <ConvertDropdown data={data.convertTo} />
-                            {/* {data.convertTo.map((item) => (
-                            ))} */}
-                          </>
-                        ) : (
-                          <>
-                            <ConvertDropdown data={data.convertTo} />
-                          </>
-                        )}
-                      </span>
+                      <div>
+                        <span>Convert to:</span>
+                        <span className="flex-1 ml-1">
+                          {data.name == "Custom" ? (
+                            <>
+                              <ConvertDropdown data={data.convertTo} />
+                            </>
+                          ) : (
+                            <>
+                              <ConvertDropdown data={data.convertTo} />
+                            </>
+                          )}
+                        </span>
+                      </div>
 
-                      <div className="flex space-x-1 items-center">
+                      {/* <div className="flex  space-x-1 items-center"> */}
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-2 space-y-2 sm:space-y-0 lg:items-center mt-2">
                         {convertedImage ? (
                           <>
                             <ImagePopup
@@ -337,7 +338,6 @@ function UploadFiles({ data }) {
                               }
                             >
                               <Download />
-                              {/* <span>Download</span> */}
                             </Button>
                           </>
                         ) : (
@@ -358,6 +358,7 @@ function UploadFiles({ data }) {
                         )}
 
                         <Button
+                          className="w-full md:w-10 lg:w-10"
                           onClick={() => removeFile(index)}
                           variant="outline"
                           size="icon"

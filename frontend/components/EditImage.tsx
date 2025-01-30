@@ -48,7 +48,11 @@ export function EditImage({ file, onSave, onClose }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsOpen(true)}>
+        <Button
+          className="w-10"
+          variant="outline"
+          onClick={() => setIsOpen(true)}
+        >
           <Pencil />
         </Button>
       </DialogTrigger>
