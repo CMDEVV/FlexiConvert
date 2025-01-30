@@ -53,7 +53,7 @@ function Page() {
             <BreadcrumbPage>
               {data[0].name !== "Custom"
                 ? `${data[0].convertFrom} to ${data[0].convertTo}`
-                : data[0].convertTo}
+                : data[0].name}
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>

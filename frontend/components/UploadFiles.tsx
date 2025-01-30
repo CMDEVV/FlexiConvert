@@ -10,41 +10,9 @@ import { Trash2, Eye, Download, Pencil } from "lucide-react";
 import { ImagePopup } from "./ImagePopup";
 import { EditImage } from "./EditImage";
 import ImageConversionPopup from "./ImageConversionPopup";
-// import { useRouter } from "next/router";
-
-// type Props = {
-//   param: MyData;
-// };
-
-// type MyData = {
-//   id: number;
-//   name: string;
-//   convertFrom: string;
-//   convertTo: string;
-// };
-
-const convertImages = async (images) => {
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/convert-file/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ images }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error("Error converting images", error);
-  }
-};
 
 function UploadFiles({ data }) {
+  console.log("dataaUpload", data);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -53,16 +21,20 @@ function UploadFiles({ data }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [fileToEdit, setFileToEdit] = useState(null);
 
-  const openPopup = (fileIndex) => {
-    setFileToEdit(fileIndex);
-    setIsPopupOpen(true);
-  };
+  // const openPopup = (fileIndex) => {
+  //   setFileToEdit(fileIndex);
+  //   setIsPopupOpen(true);
+  // };
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     const updatedFiles = files.map((file) => ({
       file,
-      isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
+      // isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
+      isValid:
+        data.name === "Custom" ||
+        file.type === `image/${data.convertFrom.toLowerCase()}`,
+
       // image: [],
     }));
 
@@ -333,7 +305,17 @@ function UploadFiles({ data }) {
                       {/* <ArrowRightIcon className="h-4" /> */}
                       <span>Convert to:</span>
                       <span className="flex-1 ml-1">
-                        <ConvertDropdown data={data.convertTo} />
+                        {data.name == "Custom" ? (
+                          <>
+                            <ConvertDropdown data={data.convertTo} />
+                            {/* {data.convertTo.map((item) => (
+                            ))} */}
+                          </>
+                        ) : (
+                          <>
+                            <ConvertDropdown data={data.convertTo} />
+                          </>
+                        )}
                       </span>
 
                       <div className="flex space-x-1 items-center">
@@ -360,26 +342,6 @@ function UploadFiles({ data }) {
                           </>
                         ) : (
                           <>
-                            {/* <Button
-                              variant="outline"
-                              onClick={() => openPopup(index)}
-                            >
-                              Edit Image
-                            </Button>
-                            {isPopupOpen && fileToEdit !== null && (
-                              <ImageConversionPopup
-                                file={selectedFiles[fileToEdit]}
-                                onSave={(quality, width, height) =>
-                                  updateFileSettings(
-                                    fileToEdit,
-                                    quality,
-                                    width,
-                                    height
-                                  )
-                                }
-                                onClose={() => setIsPopupOpen(false)}
-                              />
-                            )} */}
                             <EditImage
                               file={selectedFiles[index]}
                               onSave={(quality, width, height) =>
@@ -394,28 +356,6 @@ function UploadFiles({ data }) {
                             />
                           </>
                         )}
-                        {/* {convertedImage && (
-                          <>
-                            <ImagePopup
-                              data={{ convertedImage, convertedFormat }}
-                            />
-                            <Button
-                              variant="outline"
-                              onClick={() =>
-                                downloadFile(
-                                  convertedImage,
-                                  `${
-                                    file.name.split(".")[0]
-                                  }.${convertedFormat}`,
-                                  convertedFormat
-                                )
-                              }
-                            >
-                              <Download />
-                            
-                            </Button>
-                          </>
-                        ) } */}
 
                         <Button
                           onClick={() => removeFile(index)}
@@ -485,4 +425,25 @@ export default UploadFiles;
 //       return { ...prev, [index]: currentProgress + 20 };
 //     });
 //   }, 200); // Update progress every 200ms
+// };
+
+// const convertImages = async (images) => {
+//   try {
+//     const response = await fetch("http://127.0.0.1:8000/api/convert-file/", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ images }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Error: ${response.status}`);
+//     }
+
+//     const result = await response.json();
+//     return result;
+//   } catch (error) {
+//     console.error("Error converting images", error);
+//   }
 // };

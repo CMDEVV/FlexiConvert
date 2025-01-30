@@ -137,14 +137,20 @@ export default function NewSidebar({ mainContent }) {
       </div>
 
       {/* Toggle Button */}
-      {/* {!isLargeScreen && (
-        <button
-          className="fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded-full focus:outline-none"
+      {!isLargeScreen && (
+        <div
+          className="fixed top-4 right-4 z-50 p-2 text-black rounded-full focus:outline-none"
           onClick={toggleSidebar}
         >
-          {isOpen ? "Close" : "Open"}
-        </button>
-      )} */}
+          {isOpen ? <FiX /> : <FiMenu />}
+        </div>
+        // <button
+        //   className="fixed top-4 right-4 z-50 p-2 bg-blue-600 text-white rounded-full focus:outline-none"
+        //   onClick={toggleSidebar}
+        // >
+        //   {isOpen ? "X" : "X"}
+        // </button>
+      )}
 
       {/* Main Content */}
       <div

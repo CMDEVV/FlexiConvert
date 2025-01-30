@@ -20,7 +20,17 @@ export const tools = [
     id: 1,
     name: "Custom",
     convertFrom: "",
-    convertTo: "Custom",
+    convertTo: [
+      {
+        id: 1,
+        name: "Jpeg",
+      },
+      {
+        id: 2,
+        name: "Png",
+      },
+    ],
+    // convertTo: "Custom",
     href: "#",
   },
   {
@@ -48,8 +58,15 @@ function CardMain() {
             <CardHeader className="items-center">
               <CardTitle> {item.convertFrom}</CardTitle>
               {item.convertFrom ? <ChevronDownIcon className="w-10" /> : ""}
-
-              <CardTitle>{item.convertTo}</CardTitle>
+              {item.name == "Custom" ? (
+                <>
+                  <CardTitle>{item.name}</CardTitle>
+                </>
+              ) : (
+                <>
+                  <CardTitle>{item.convertTo}</CardTitle>
+                </>
+              )}
             </CardHeader>
           </Link>
           {/* <CardContent>

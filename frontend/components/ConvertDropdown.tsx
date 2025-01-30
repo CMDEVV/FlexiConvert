@@ -2,7 +2,10 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuRadioGroup,
+} from "@radix-ui/react-dropdown-menu";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +15,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
@@ -23,42 +27,85 @@ type convertTypes = {
   convertTo: string;
 };
 
+// If chosen image is jpeg than set default to png and vice versa
+// Dont need a dropdown if only 1 item is available
+
 export function ConvertDropdown({ data }) {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true);
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false);
-  const [showPanel, setShowPanel] = React.useState<Checked>(false);
+  console.log("DropDownDataa", data);
+
+  const [position, setPosition] = React.useState("");
   const [obj, setOjb] = useState([]);
+  // const [obj, setOjb] = useState<any[]>([]);
 
   useEffect(() => {
-    setOjb(data);
+    if (!Array.isArray(data)) {
+      console.log("NotAnObject");
+      setPosition(data);
+    } else {
+      console.log("ItsAnObject");
+      setOjb(data);
+    }
   }, []);
-  //   console.log("convertTypess", obj);
+  console.log("convertTypess", obj);
 
+  // useEffect(() => {
+  //   if (obj.count < 1) {
+  //     setPosition(data);
+  //   }
+  // }, []);
+
+  // console.log("PositionSett", position);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">{obj}</Button>
+        {/* <Button variant="outline">{obj}</Button> */}
+        <Button variant="outline">{position}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         {/* <DropdownMenuLabel>Appearance</DropdownMenuLabel> */}
         {/* <DropdownMenuSeparator /> */}
 
+        {obj.length > 1 ? (
+          <>
+            {obj.map((item) => (
+              <DropdownMenuRadioGroup
+                key={item.id}
+                value={position}
+                onValueChange={setPosition}
+              >
+                <DropdownMenuRadioItem value={item.name}>
+                  {item.name}
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            ))}
+          </>
+        ) : (
+          <>
+            <DropdownMenuRadioGroup
+              value={position}
+              onValueChange={setPosition}
+            >
+              <DropdownMenuRadioItem value={obj}>{obj}</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </>
+        )}
+
         {/* {obj.map((item) => (
-          <div>
+          <div key={item.id}>
             <DropdownMenuCheckboxItem
               checked={showStatusBar}
               onCheckedChange={setShowActivityBar}
             >
-              {item}
+              {item.name}
             </DropdownMenuCheckboxItem>
           </div>
         ))} */}
-        <DropdownMenuCheckboxItem
+        {/* <DropdownMenuCheckboxItem
           checked={showStatusBar}
           onCheckedChange={setShowStatusBar}
         >
           {obj}
-        </DropdownMenuCheckboxItem>
+        </DropdownMenuCheckboxItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
