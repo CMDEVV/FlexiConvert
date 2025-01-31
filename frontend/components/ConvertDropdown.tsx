@@ -40,10 +40,8 @@ export function ConvertDropdown({ data }) {
 
   useEffect(() => {
     if (!Array.isArray(data)) {
-      console.log("NotAnObject");
       setPosition(data);
     } else {
-      console.log("ItsAnObject");
       setOjb(data);
     }
   }, []);
@@ -62,11 +60,11 @@ export function ConvertDropdown({ data }) {
         {/* <Button variant="outline">{obj}</Button> */}
         <Button variant="outline">{position}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        {/* <DropdownMenuLabel>Appearance</DropdownMenuLabel> */}
-        {/* <DropdownMenuSeparator /> */}
+      {/* <DropdownMenuLabel>Appearance</DropdownMenuLabel> */}
+      {/* <DropdownMenuSeparator /> */}
 
-        {obj.length > 1 ? (
+      {obj.length > 1 && (
+        <DropdownMenuContent className="w-56">
           <>
             {obj.map((item) => (
               <DropdownMenuRadioGroup
@@ -80,18 +78,10 @@ export function ConvertDropdown({ data }) {
               </DropdownMenuRadioGroup>
             ))}
           </>
-        ) : (
-          <>
-            <DropdownMenuRadioGroup
-              value={position}
-              onValueChange={setPosition}
-            >
-              <DropdownMenuRadioItem value={obj}>{obj}</DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </>
-        )}
+        </DropdownMenuContent>
+      )}
 
-        {/* {obj.map((item) => (
+      {/* {obj.map((item) => (
           <div key={item.id}>
             <DropdownMenuCheckboxItem
               checked={showStatusBar}
@@ -101,13 +91,12 @@ export function ConvertDropdown({ data }) {
             </DropdownMenuCheckboxItem>
           </div>
         ))} */}
-        {/* <DropdownMenuCheckboxItem
+      {/* <DropdownMenuCheckboxItem
           checked={showStatusBar}
           onCheckedChange={setShowStatusBar}
         >
           {obj}
         </DropdownMenuCheckboxItem> */}
-      </DropdownMenuContent>
     </DropdownMenu>
   );
 }

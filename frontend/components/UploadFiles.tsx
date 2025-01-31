@@ -250,7 +250,7 @@ function UploadFiles({ data }) {
                 Selected Files ({selectedFiles.length})
               </h3>
 
-              <div className="space-x-3">
+              <div className="flex space-x-2">
                 <Button
                   className="text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                   onClick={downloadAllFiles}
@@ -303,9 +303,10 @@ function UploadFiles({ data }) {
                         </p>
                       </div>
 
-                      <div>
+                      <div className="flex-1 ml-1">
                         <span>Convert to:</span>
-                        <span className="flex-1 ml-1">
+                        {/* <span className="flex-1 ml-1"> */}
+                        <span>
                           {data.name == "Custom" ? (
                             <>
                               <ConvertDropdown data={data.convertTo} />
