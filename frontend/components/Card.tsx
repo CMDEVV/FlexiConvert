@@ -49,11 +49,18 @@ export const tools = [
   },
 ];
 
-function CardMain() {
+function CardMain({ data }) {
   return (
-    <div className="grid sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-3 gap-5 ">
+    <div
+      className={`grid gap-5 ${
+        data == "grid"
+          ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2"
+          : "grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3"
+      }`}
+    >
       {tools.map((item) => (
-        <Card key={item.id} className="sm:w-1 md:w-96 cursor-pointer">
+        // <Card key={item.id} className="sm:w-1 md:w-96 cursor-pointer">
+        <Card key={item.id} className="cursor-pointer">
           <Link href={`/detail/${item.id}`}>
             <CardHeader className="items-center">
               <CardTitle> {item.convertFrom}</CardTitle>

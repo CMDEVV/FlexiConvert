@@ -36,6 +36,8 @@ export function ConvertDropdown({ data }) {
 
   const [position, setPosition] = React.useState("");
   const [obj, setOjb] = useState([]);
+  const [errMsg, setErrMsg] = useState("");
+
   // const [obj, setOjb] = useState<any[]>([]);
 
   useEffect(() => {
@@ -43,6 +45,10 @@ export function ConvertDropdown({ data }) {
       setPosition(data);
     } else {
       setOjb(data);
+    }
+
+    if (position == "") {
+      setErrMsg("Select convert to!");
     }
   }, []);
   console.log("convertTypess", obj);
@@ -64,8 +70,9 @@ export function ConvertDropdown({ data }) {
       {/* <DropdownMenuSeparator /> */}
 
       {obj.length > 1 && (
-        <DropdownMenuContent className="w-56">
-          <>
+        <div>
+          {<span className="text-red-300">{position == "" ? errMsg : ""}</span>}
+          <DropdownMenuContent className="w-56">
             {obj.map((item) => (
               <DropdownMenuRadioGroup
                 key={item.id}
@@ -77,8 +84,8 @@ export function ConvertDropdown({ data }) {
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             ))}
-          </>
-        </DropdownMenuContent>
+          </DropdownMenuContent>
+        </div>
       )}
 
       {/* {obj.map((item) => (

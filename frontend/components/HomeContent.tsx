@@ -31,12 +31,11 @@ function HomeContent() {
       </div>
 
       <TabsContent value="grid">
-        <CardMain />
+        <CardMain data={"grid"} />
       </TabsContent>
-      {/* <TabsContent value="account">
-            Make changes to your account here.
-          </TabsContent>
-          <TabsContent value="password">Change your password here.</TabsContent> */}
+      <TabsContent value="list">
+        <CardMain data={"list"} />
+      </TabsContent>
     </Tabs>
     // </div>
 

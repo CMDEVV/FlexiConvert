@@ -69,11 +69,11 @@ export default function NewSidebar({ mainContent }) {
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <img
+              {/* <img
                 src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9"
                 alt="Logo"
                 className="w-8 h-8 rounded-full"
-              />
+              /> */}
               <span className="text-xl font-bold">FlexiConvert</span>
             </div>
           </div>
