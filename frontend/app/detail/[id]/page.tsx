@@ -36,10 +36,10 @@ import {
 function Page() {
   const params = useParams();
 
-  console.log(params);
+  // console.log(params);
 
   const data = tools.filter((item) => item.id === parseInt(params.id));
-  console.log(data);
+  // console.log(data);
   return (
     <div>
       <Breadcrumb>

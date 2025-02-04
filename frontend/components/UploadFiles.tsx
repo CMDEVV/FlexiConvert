@@ -167,7 +167,7 @@ function UploadFiles({ data }) {
 
       const result = await response.json();
 
-      console.log("resultOFData", result);
+      // console.log("resultOFData", result);
 
       // Update `selectedFiles` with the converted images and mark them as converted
       const updatedFiles = selectedFiles.map((fileObj, index) => {
