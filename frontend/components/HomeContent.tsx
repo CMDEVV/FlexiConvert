@@ -31,10 +31,10 @@ function HomeContent() {
       </div>
 
       <TabsContent value="grid">
-        <CardMain data={"grid"} />
+        <CardMain data={{ name: "grid" }} />
       </TabsContent>
       <TabsContent value="list">
-        <CardMain data={"list"} />
+        <CardMain data={{ name: "list" }} />
       </TabsContent>
     </Tabs>
     // </div>
