@@ -38,8 +38,12 @@ function Page() {
 
   // console.log(params);
 
-  const data = tools.filter((item) => item.id === parseInt(params.id));
-  // console.log(data);
+  // const data = tools.filter((item) => item.id === parseInt(params.id));
+
+  const id = Array.isArray(params.id)
+    ? parseInt(params.id[0])
+    : parseInt(params.id ?? "");
+  const data = tools.filter((item) => item.id === id);
   return (
     <div>
       <Breadcrumb>

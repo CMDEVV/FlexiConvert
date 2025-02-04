@@ -67,7 +67,7 @@ function CardMain({ data }) {
               {item.convertFrom ? <ChevronDownIcon className="w-10" /> : ""}
               {item.name == "Custom" ? (
                 <>
-                  <CardTitle>{item.name}</CardTitle>
+                  <CardTitle>{item.name}</CardTitle>~
                 </>
               ) : (
                 <>
