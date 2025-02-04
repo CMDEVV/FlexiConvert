@@ -11,6 +11,8 @@ import { ImagePopup } from "./ImagePopup";
 import { EditImage } from "./EditImage";
 import ImageConversionPopup from "./ImageConversionPopup";
 
+import serviceCalls from "../services/service";
+
 function UploadFiles({ data }) {
   console.log("dataaUpload", data);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -149,9 +151,9 @@ function UploadFiles({ data }) {
       );
 
       console.log("convertedImagesData", images);
-
+      serviceCalls;
       // Call the API
-      const response = await fetch("http://localhost:8000/api/convert-file/", {
+      const response = await fetch(`${serviceCalls.baseURL}api/convert-file/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
