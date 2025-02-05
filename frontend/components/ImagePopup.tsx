@@ -14,8 +14,17 @@ import {
 // import { Input } from "@/components/ui/input";
 // import { Label } from "@/components/ui/label";
 
-export function ImagePopup({ data }) {
-  //   console.log("Popup_Preview", data);
+type imagePopupType = {
+  convertedFormat: string;
+  convertedImage: string;
+};
+
+type ImagePopupMainType = {
+  data: imagePopupType;
+};
+
+export function ImagePopup({ data }: ImagePopupMainType) {
+  // console.log("Popup_Preview", data);
   return (
     <Dialog>
       <DialogTrigger asChild>

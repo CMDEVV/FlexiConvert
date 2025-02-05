@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, Eye, Download, Pencil } from "lucide-react";
 import { ImagePopup } from "./ImagePopup";
 import { EditImage } from "./EditImage";
-import ImageConversionPopup from "./ImageConversionPopup";
+// import ImageConversionPopup from "./ImageConversionPopup";
 
 import serviceCalls from "../services/service";
 
@@ -213,6 +213,7 @@ function UploadFiles({ data }) {
     setIsPopupOpen(false); // Close popup after updating
   };
 
+  console.log("JustRandomThing", selectedFiles);
   return (
     // <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div className="mt-8 ">
@@ -346,7 +347,7 @@ function UploadFiles({ data }) {
                         ) : (
                           <>
                             <EditImage
-                              file={selectedFiles[index]}
+                              // file={selectedFiles[index]}
                               onSave={(quality, width, height) =>
                                 updateFileSettings(
                                   index,

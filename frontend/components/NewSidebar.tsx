@@ -13,10 +13,16 @@ import {
 
 import Link from "next/link";
 
-export default function NewSidebar({ mainContent }) {
+type NewSidebarProps = {
+  mainContent: React.ReactNode; // Explicitly define mainContent as React Node
+};
+
+export default function NewSidebar({ mainContent }: NewSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState({});
+  const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});
+
+  // const [dropdownOpen, setDropdownOpen] = useState({});
 
   // Toggle sidebar open/close
   const toggleSidebar = () => {
@@ -24,9 +30,15 @@ export default function NewSidebar({ mainContent }) {
   };
 
   // Toggle dropdowns
-  const toggleDropdown = (menu) => {
-    setDropdownOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+  const toggleDropdown = (menu: string) => {
+    setDropdownOpen((prev) => ({
+      ...prev,
+      [menu]: !prev[menu] || false, // Ensure it defaults to false if undefined
+    }));
   };
+  // const toggleDropdown = (menu: string) => {
+  //   setDropdownOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+  // };
   // Check screen size and update `isLargeScreen`
   useEffect(() => {
     const checkScreenSize = () => {

@@ -14,14 +14,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
 
-export function EditImage({ file, onSave, onClose }) {
-  console.log(file);
+type EditMainProps = {
+  // onSave: (editedFile: File) => void;
+  onSave: (quality: Number, width: string, height: string) => void;
+  onClose: () => void;
+};
+
+export function EditImage({ onSave, onClose }: EditMainProps) {
+  // console.log("EditPage", file);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [quality, setQuality] = useState(file.customQuality || 80);
-  const [width, setWidth] = useState(file.customWidth);
-  const [height, setHeight] = useState(file.customHeight);
-  const [value, setValue] = useState("");
+  // const [quality, setQuality] = useState(file.customQuality || 80);
+  // const [width, setWidth] = useState(file.customWidth);
+  // const [height, setHeight] = useState(file.customHeight);
+
+  const [quality, setQuality] = useState(Number || 80);
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  // const [value, setValue] = useState("");
 
   const min = 0;
   const max = 100;
@@ -30,20 +40,20 @@ export function EditImage({ file, onSave, onClose }) {
     onSave(quality, width, height);
 
     setIsOpen(false);
-    console.log("CLickingONSAVE", quality, width, height);
+    // console.log("CLickingONSAVE", quality, width, height);
   };
 
-  const handleChange = (e) => {
-    let newValue = parseInt(e.target.value, 10);
+  // const handleChange = (e) => {
+  //   let newValue = parseInt(e.target.value, 10);
 
-    // Allow empty input or enforce min/max range
-    if (
-      newValue === "" ||
-      (Number(newValue) >= min && Number(newValue) <= max)
-    ) {
-      setValue(newValue);
-    }
-  };
+  //   // Allow empty input or enforce min/max range
+  //   if (
+  //     newValue === "" ||
+  //     (Number(newValue) >= min && Number(newValue) <= max)
+  //   ) {
+  //     setValue(newValue);
+  //   }
+  // };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

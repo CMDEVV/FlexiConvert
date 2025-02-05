@@ -5,7 +5,6 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 890;
-import TestSidebar from "@/components/TestSidebar";
 import HomeContent from "@/components/HomeContent";
 import Tss from "./detail/[id]/page";
 import NewSidebar from "@/components/NewSidebar";
@@ -34,7 +33,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <NewSidebar mainContent={children} />
-        {/* <TestSidebar mainContent={children} /> */}
         {/* {children} */}
       </body>
     </html>

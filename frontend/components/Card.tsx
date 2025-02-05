@@ -73,7 +73,22 @@ function CardMain({ data }: CardMainProps) {
             <CardHeader className="items-center">
               <CardTitle> {item.convertFrom}</CardTitle>
               {item.convertFrom ? <ChevronDownIcon className="w-10" /> : ""}
-              {item.name == "Custom" ? (
+              {item.name === "Custom" ? (
+                <>
+                  <CardTitle>{item.name}</CardTitle>
+                </>
+              ) : (
+                <>
+                  <CardTitle>
+                    {Array.isArray(item.convertTo)
+                      ? item.convertTo.map((entry) => (
+                          <span key={entry.id}>{entry.name}</span>
+                        ))
+                      : item.convertTo}
+                  </CardTitle>
+                </>
+              )}
+              {/* {item.name == "Custom" ? (
                 <>
                   <CardTitle>{item.name}</CardTitle>
                 </>
@@ -81,7 +96,7 @@ function CardMain({ data }: CardMainProps) {
                 <>
                   <CardTitle>{item.convertTo}</CardTitle>
                 </>
-              )}
+              )} */}
             </CardHeader>
           </Link>
           {/* <CardContent>
