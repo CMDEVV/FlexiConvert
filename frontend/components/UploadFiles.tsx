@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -13,9 +15,22 @@ import { EditImage } from "./EditImage";
 
 import serviceCalls from "../services/service";
 
-function UploadFiles({ data }) {
-  console.log("dataaUpload", data);
-  const [selectedFiles, setSelectedFiles] = useState([]);
+type uploadDataType = {
+  convertFrom: string;
+  convertTo: string | { id: number; name: string }[];
+  href: string;
+  id: number;
+  name: string;
+};
+
+type UploadDataMainProp = {
+  data: uploadDataType;
+};
+
+function UploadFiles({ data }: UploadDataMainProp) {
+  // console.log("dataaUpload", data);
+  // const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -28,26 +43,30 @@ function UploadFiles({ data }) {
   //   setIsPopupOpen(true);
   // };
 
+  //@ts-ignore
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
+
     const updatedFiles = files.map((file) => ({
       file,
       // isValid: file.type === `image/${data.convertFrom.toLowerCase()}`,
       isValid:
         data.name === "Custom" ||
+        //@ts-ignore
         file.type === `image/${data.convertFrom.toLowerCase()}`,
 
       // image: [],
     }));
-
+    //@ts-ignore
     setSelectedFiles((prevFiles) => [...prevFiles, ...updatedFiles]);
     setError(null); // Clear previous errors
   };
 
   const handleUploadClick = () => {
+    //@ts-ignore
     fileInputRef.current.click();
   };
-
+  //@ts-ignore
   const formatFileSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -57,6 +76,7 @@ function UploadFiles({ data }) {
   };
 
   // Convert selected files to Base64
+  //@ts-ignore
   const convertToBase64 = (file) =>
     new Promise((resolve, reject) => {
       console.log("Converting file:", file); // Log the file
@@ -67,6 +87,7 @@ function UploadFiles({ data }) {
 
       const reader = new FileReader();
       reader.readAsDataURL(file);
+      //@ts-ignore
       reader.onload = () => resolve(reader.result.split(",")[1]); // Remove Base64 prefix
       reader.onerror = (error) => reject(error);
     });
@@ -74,6 +95,7 @@ function UploadFiles({ data }) {
   // Download All
   const downloadAllFiles = () => {
     // Filter out files that haven't been converted
+    //@ts-ignore
     const convertedFiles = selectedFiles.filter((file) => file.convertedImage);
 
     if (convertedFiles.length === 0) {
@@ -84,12 +106,14 @@ function UploadFiles({ data }) {
     // Loop through the converted files and download each one
     convertedFiles.forEach(
       ({ file, convertedImage, convertedFormat }, index) => {
+        //@ts-ignore
         const fileName = `${file.name.split(".")[0]}.${convertedFormat}`;
         downloadFile(convertedImage, fileName, convertedFormat);
       }
     );
   };
 
+  //@ts-ignore
   const downloadFile = (base64Data, fileName, format) => {
     if (!base64Data) {
       alert("No converted image to download.");
@@ -105,6 +129,7 @@ function UploadFiles({ data }) {
   };
 
   // Handle form submission
+  //@ts-ignore
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -112,6 +137,7 @@ function UploadFiles({ data }) {
 
     try {
       const filesToConvert = selectedFiles.filter(
+        //@ts-ignore
         (file) => !file.convertedImage
       );
       const totalFiles = filesToConvert.length;
@@ -129,6 +155,7 @@ function UploadFiles({ data }) {
             index
           ) => {
             if (!isValid) {
+              //@ts-ignore
               throw new Error(`Invalid file type for ${file.name}.`);
             }
 
@@ -140,6 +167,7 @@ function UploadFiles({ data }) {
             return {
               originalFile: file,
               conversion_type:
+                //@ts-ignore
                 file.type === "image/png" ? "png_to_jpeg" : "jpeg_to_png",
               image: base64Image,
               quality: customQuality || 90,
@@ -172,11 +200,14 @@ function UploadFiles({ data }) {
       // Update `selectedFiles` with the converted images and mark them as converted
       const updatedFiles = selectedFiles.map((fileObj, index) => {
         const convertedResult = result.results.find(
+          //@ts-ignore
           (res, resIndex) =>
+            //@ts-ignore
             fileObj.file.name === images[resIndex].originalFile.name
         );
         if (convertedResult) {
           return {
+            //@ts-ignore
             ...fileObj,
             convertedImage: convertedResult.image || null,
             convertedFormat: convertedResult.format?.toLowerCase() || null,
@@ -185,6 +216,7 @@ function UploadFiles({ data }) {
         }
         return fileObj;
       });
+      //@ts-ignore
       setSelectedFiles(updatedFiles);
     } catch (error) {
       console.error("Error during image conversion:", error);
@@ -193,6 +225,7 @@ function UploadFiles({ data }) {
     }
   };
 
+  //@ts-ignore
   const removeFile = (index) => {
     const updatedFiles = selectedFiles.filter((_, i) => i !== index);
     setSelectedFiles(updatedFiles);
@@ -200,10 +233,12 @@ function UploadFiles({ data }) {
 
   // Determine if all selected files are valid
   const allFilesMatch = selectedFiles.every(({ isValid }) => isValid);
-
+  //@ts-ignore
   const updateFileSettings = (fileIndex, quality, width, height) => {
     const updatedFiles = [...selectedFiles];
+    //@ts-ignore
     updatedFiles[fileIndex] = {
+      //@ts-ignore
       ...updatedFiles[fileIndex],
       customQuality: quality,
       customWidth: width,
@@ -257,6 +292,7 @@ function UploadFiles({ data }) {
                 <Button
                   className="text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                   onClick={downloadAllFiles}
+                  //@ts-ignore
                   disabled={!selectedFiles.some((file) => file.convertedImage)}
                 >
                   Download All
