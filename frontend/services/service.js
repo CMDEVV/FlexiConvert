@@ -5,7 +5,7 @@ let baseURL = "";
 if (window.location.origin === "http://localhost:3000") {
   baseURL = "http://localhost:8000/";
 } else {
-  baseURL = "https://flexiconvert-production.up.railway.app/";
+  baseURL = "https://server-production-24fc.up.railway.app/";
 }
 
 // const baseURLInstance = axios.create({
