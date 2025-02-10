@@ -24,7 +24,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+# @csrf_exempt
 def convert_image(request):
     if request.method == "POST":
         try:

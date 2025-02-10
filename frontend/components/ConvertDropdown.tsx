@@ -41,7 +41,7 @@ type ConvertDropdownProps = {
 };
 
 export function ConvertDropdown({ data }: ConvertDropdownProps) {
-  console.log("DropDownDataa", data);
+  // console.log("DropDownDataa", data);
 
   const [position, setPosition] = React.useState("");
   // const [obj, setOjb] = useState([]);
@@ -75,7 +75,7 @@ export function ConvertDropdown({ data }: ConvertDropdownProps) {
     }
   }, [data]); // Ensure `data` is a dependency to correctly update when `data` changes
 
-  console.log("convertTypess", obj);
+  // console.log("convertTypess", obj);
 
   return (
     <DropdownMenu>

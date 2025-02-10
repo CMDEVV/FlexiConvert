@@ -1,6 +1,0 @@
-
-[phases.setup]
-commands = ["python3 -m venv /opt/venv"]
-
-[start]
-cmd = "python app.py"

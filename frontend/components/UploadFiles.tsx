@@ -178,7 +178,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
         )
       );
 
-      console.log("convertedImagesData", images);
+      // console.log("convertedImagesData", images);
       serviceCalls;
       // Call the API
       const response = await fetch(`${serviceCalls.baseURL}api/convert-file/`, {
@@ -248,7 +248,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
     setIsPopupOpen(false); // Close popup after updating
   };
 
-  console.log("JustRandomThing", selectedFiles);
+  // console.log("JustRandomThing", selectedFiles);
   return (
     // <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div className="mt-8 ">

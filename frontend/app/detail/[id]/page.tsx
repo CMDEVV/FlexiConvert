@@ -44,7 +44,7 @@ function Page() {
     ? parseInt(params.id[0])
     : parseInt(params.id ?? "");
   const data = tools.filter((item) => item.id === id);
-  console.log("UploadDataaa", data);
+  // console.log("UploadDataaa", data);
   return (
     <div>
       <Breadcrumb>
