@@ -21,9 +21,9 @@ environ.Env.read_env()
 # Allow the cookie to be sent to all subdomains of up.railway.app
 CSRF_COOKIE_DOMAIN = ".up.railway.app"
 
-# For cross-site requests (frontend and backend on different subdomains), ensure:
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = True  # This should be True in production when using HTTPS
+CSRF_COOKIE_NAME = "csrftoken"  # Ensures only one CSRF cookie is used
+CSRF_COOKIE_PATH = "/"  # Ensures it's set at the root
+CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin requests
 
 # Also, ensure CORS is configured to allow credentials:
 CORS_ALLOW_CREDENTIALS = True
