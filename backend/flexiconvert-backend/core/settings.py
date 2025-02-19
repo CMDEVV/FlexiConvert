@@ -18,9 +18,15 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
-CSRF_COOKIE_SECURE = True  # Keep this True for production
-CSRF_COOKIE_SAMESITE = 'None'  # Allow cross-site CSRF cookies
-CORS_ALLOW_CREDENTIALS = True  # Ensure cookies are sent with requests
+# Allow the cookie to be sent to all subdomains of up.railway.app
+CSRF_COOKIE_DOMAIN = ".up.railway.app"
+
+# For cross-site requests (frontend and backend on different subdomains), ensure:
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True  # This should be True in production when using HTTPS
+
+# Also, ensure CORS is configured to allow credentials:
+CORS_ALLOW_CREDENTIALS = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

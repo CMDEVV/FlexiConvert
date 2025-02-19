@@ -28,6 +28,7 @@ type UploadDataMainProp = {
 };
 
 function getCookie(name) {
+  console.log("Checking for cookie:", document.cookie); // Debugging
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
     const cookies = document.cookie.split(";");
@@ -39,6 +40,7 @@ function getCookie(name) {
       }
     }
   }
+  console.log("CSRF Token Found:", cookieValue); // Debugging
   return cookieValue;
 }
 
