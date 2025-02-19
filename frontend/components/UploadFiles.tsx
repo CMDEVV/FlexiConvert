@@ -33,7 +33,6 @@ function getCookie(name) {
     const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
-      // Does this cookie string begin with the name we want?
       if (cookie.startsWith(name + "=")) {
         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
         break;
@@ -44,7 +43,7 @@ function getCookie(name) {
 }
 
 function UploadFiles({ data }: UploadDataMainProp) {
-  // console.log("CSRTOKENNNNN", getCookie("csrftoken"));
+  console.log("CSRTOKENNNNN", getCookie("csrftoken"));
   // console.log("dataaUpload", data);
   // const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -152,6 +151,8 @@ function UploadFiles({ data }: UploadDataMainProp) {
     setLoading(true);
     setProgress(0);
 
+    const csrfToken = getCookie("csrftoken");
+
     try {
       const filesToConvert = selectedFiles.filter(
         //@ts-ignore
@@ -202,8 +203,9 @@ function UploadFiles({ data }: UploadDataMainProp) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"), // Function to get CSRF cookie
+          "X-CSRFToken": csrfToken, // Function to get CSRF cookie
         },
+        credentials: "include",
         body: JSON.stringify({ images }),
       });
 
