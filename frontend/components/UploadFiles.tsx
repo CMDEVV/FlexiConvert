@@ -205,7 +205,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken, // Function to get CSRF cookie
+          // "X-CSRFToken": csrfToken, // Function to get CSRF cookie
         },
         credentials: "include",
         body: JSON.stringify({ images }),
