@@ -18,9 +18,9 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
-CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF cookie
-CSRF_COOKIE_SECURE = True  # Enable this if using HTTPS
-CSRF_USE_SESSIONS = False  # Ensure CSRF token is stored in cookies
+CSRF_COOKIE_SECURE = True  # Keep this True for production
+CSRF_COOKIE_SAMESITE = 'None'  # Allow cross-site CSRF cookies
+CORS_ALLOW_CREDENTIALS = True  # Ensure cookies are sent with requests
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

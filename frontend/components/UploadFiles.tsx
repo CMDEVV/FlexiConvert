@@ -44,6 +44,7 @@ function getCookie(name) {
 }
 
 function UploadFiles({ data }: UploadDataMainProp) {
+  // console.log("CSRTOKENNNNN", getCookie("csrftoken"));
   // console.log("dataaUpload", data);
   // const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
