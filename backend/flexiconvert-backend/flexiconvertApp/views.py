@@ -20,12 +20,20 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from PIL import Image   # Import Resampling explicitly if needed
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
 
 logger = logging.getLogger(__name__)
 
-# @csrf_exempt
+
 @ensure_csrf_cookie
+def get_csrf_token(request):
+    """
+    This view should be called from the frontend to set the CSRF token.
+    """
+    return JsonResponse({"message": "CSRF cookie set!"})
+
+# @csrf_exempt
+@csrf_protect 
 def convert_image(request):
     if request.method == "POST":
         try:

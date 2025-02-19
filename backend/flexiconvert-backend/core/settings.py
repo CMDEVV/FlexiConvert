@@ -18,8 +18,7 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
-
-CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF cookie
 CSRF_COOKIE_SECURE = True  # Enable this if using HTTPS
 CSRF_USE_SESSIONS = False  # Ensure CSRF token is stored in cookies
 
