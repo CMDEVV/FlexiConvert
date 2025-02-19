@@ -14,11 +14,9 @@ logger = logging.getLogger(__name__)
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
-    """
-    This view should be called from the frontend to set the CSRF token.
-    """
-    return JsonResponse({"message": "CSRF cookie set!"})
-
+    response = JsonResponse({"message": "CSRF cookie set!"})
+    response.set_cookie("csrftoken", "", max_age=0)  # Force clear old token
+    return response
 # @csrf_exempt
 @csrf_protect 
 def convert_image(request):
