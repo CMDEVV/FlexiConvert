@@ -27,6 +27,22 @@ type UploadDataMainProp = {
   data: uploadDataType;
 };
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
 function UploadFiles({ data }: UploadDataMainProp) {
   // console.log("dataaUpload", data);
   // const [selectedFiles, setSelectedFiles] = useState([]);
@@ -185,6 +201,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"), // Function to get CSRF cookie
         },
         body: JSON.stringify({ images }),
       });

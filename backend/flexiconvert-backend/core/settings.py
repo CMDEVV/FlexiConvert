@@ -18,6 +18,11 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
+
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = True  # Enable this if using HTTPS
+CSRF_USE_SESSIONS = False  # Ensure CSRF token is stored in cookies
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

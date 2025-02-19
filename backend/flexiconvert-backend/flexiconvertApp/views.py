@@ -20,11 +20,12 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from PIL import Image   # Import Resampling explicitly if needed
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 logger = logging.getLogger(__name__)
 
 # @csrf_exempt
+@ensure_csrf_cookie
 def convert_image(request):
     if request.method == "POST":
         try:
