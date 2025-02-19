@@ -1,16 +1,3 @@
-import io
-import base64
-import logging
-import json 
-
-from django.shortcuts import render
-from django.http import JsonResponse
-from PIL import Image
-from django.views.decorators.csrf import csrf_exempt
-
-logger = logging.getLogger(__name__)
-
-# Create your views here.
 
 import io
 import base64
