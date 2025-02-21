@@ -7,7 +7,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from PIL import Image   # Import Resampling explicitly if needed
-from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect,csrf_exempt
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 def get_csrf_token(request):
     return JsonResponse({"message": "CSRF cookie set!"})
 
-# @csrf_exempt
-@csrf_protect 
+# @csrf_protect 
+@csrf_exempt
 def convert_image(request):
     logger.info(f"CSRF Token from header: {request.headers.get('X-CSRFToken')}")
     logger.info(f"CSRF Token from cookie: {request.COOKIES.get('csrftoken')}")
