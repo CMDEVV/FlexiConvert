@@ -19,6 +19,8 @@ def get_csrf_token(request):
 # @csrf_exempt
 @csrf_protect 
 def convert_image(request):
+    logger.info(f"CSRF Token from header: {request.headers.get('X-CSRFToken')}")
+    logger.info(f"CSRF Token from cookie: {request.COOKIES.get('csrftoken')}")
     if request.method == "POST":
         try:
             # Parse request payload based on content type
