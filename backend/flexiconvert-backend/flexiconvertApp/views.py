@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
-    response = JsonResponse({"message": "CSRF cookie set!"})
-    response.set_cookie("csrftoken", "", max_age=0)  # Force clear old token
-    return response
+    return JsonResponse({"message": "CSRF cookie set!"})
+
 # @csrf_exempt
 @csrf_protect 
 def convert_image(request):
