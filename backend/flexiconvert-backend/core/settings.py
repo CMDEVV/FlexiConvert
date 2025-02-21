@@ -27,7 +27,7 @@ CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin requests
 
 # Also, ensure CORS is configured to allow credentials:
 CORS_ALLOW_CREDENTIALS = True
-
+CSRF_COOKIE_SECURE = True
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
