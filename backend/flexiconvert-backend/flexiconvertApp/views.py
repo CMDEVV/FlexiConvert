@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 def get_csrf_token(request):
     return JsonResponse({"message": "CSRF cookie set!"})
 
-# @csrf_protect 
-@csrf_exempt
+# @csrf_exempt
+@csrf_protect 
 def convert_image(request):
-    logger.info(f"CSRF Token from header: {request.headers.get('X-CSRFToken')}")
-    logger.info(f"CSRF Token from cookie: {request.COOKIES.get('csrftoken')}")
+    logger.info(f"Origin: {request.headers.get('Origin')}")
+    logger.info(f"CSRF Token (header): {request.headers.get('X-CSRFToken')}")
+    logger.info(f"CSRF Token (cookie): {request.COOKIES.get('csrftoken')}")
     if request.method == "POST":
         try:
             # Parse request payload based on content type

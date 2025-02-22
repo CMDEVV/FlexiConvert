@@ -18,16 +18,14 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
-# Allow the cookie to be sent to all subdomains of up.railway.app
-CSRF_COOKIE_DOMAIN = ".up.railway.app"
+CSRF_COOKIE_DOMAIN = ".up.railway.app"  # Good for subdomains
+CSRF_COOKIE_NAME = "csrftoken"          # Default, looks fine
+CSRF_COOKIE_PATH = "/"                  # Ensures availability site-wide
+CSRF_COOKIE_SAMESITE = "None"           # Required for cross-origin
+CSRF_COOKIE_SECURE = True               # Must be True for HTTPS in production
+CSRF_COOKIE_HTTPONLY = False            # Ensure JavaScript can read it (optional)
 
-CSRF_COOKIE_NAME = "csrftoken"  # Ensures only one CSRF cookie is used
-CSRF_COOKIE_PATH = "/"  # Ensures it's set at the root
-CSRF_COOKIE_SAMESITE = 'None'  # Required for cross-origin requests
-
-# Also, ensure CORS is configured to allow credentials:
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = True
+CORS_ALLOW_CREDENTIALS = True           # Required for cookies
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
