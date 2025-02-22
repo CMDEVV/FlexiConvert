@@ -27,23 +27,6 @@ type UploadDataMainProp = {
   data: uploadDataType;
 };
 
-// function getCookie(name) {
-//   console.log("Checking for cookie:", document.cookie); // Debugging
-//   let cookieValue = null;
-//   if (document.cookie && document.cookie !== "") {
-//     const cookies = document.cookie.split(";");
-//     for (let i = 0; i < cookies.length; i++) {
-//       const cookie = cookies[i].trim();
-//       if (cookie.startsWith(name + "=")) {
-//         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//         break;
-//       }
-//     }
-//   }
-//   console.log("CSRF Token Found:", cookieValue); // Debugging
-//   return cookieValue;
-// }
-
 const getCsrfTokenFromCookie = () => {
   const cookies = document.cookie
     .split(";")
@@ -52,9 +35,6 @@ const getCsrfTokenFromCookie = () => {
 };
 
 function UploadFiles({ data }: UploadDataMainProp) {
-  // console.log("CSRTOKENNNNN", getCookie("csrftoken"));
-  // console.log("dataaUpload", data);
-  // const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
@@ -68,12 +48,13 @@ function UploadFiles({ data }: UploadDataMainProp) {
   //   setIsPopupOpen(true);
   // };
 
+  // Fetching csrf Token
   fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
     method: "GET",
     credentials: "include",
   })
     .then((response) => response.json())
-    .then((data) => console.log("CSRF Token set:", data))
+    // .then((data) => console.log("CSRF Token set:", data))
     .catch((error) => console.error("CSRF Error:", error));
 
   //@ts-ignore
@@ -112,7 +93,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
   //@ts-ignore
   const convertToBase64 = (file) =>
     new Promise((resolve, reject) => {
-      console.log("Converting file:", file); // Log the file
+      // console.log("Converting file:", file); // Log the file
       if (!file || !(file instanceof Blob)) {
         reject(new Error("Invalid file type. Expected a Blob or File object."));
         return;

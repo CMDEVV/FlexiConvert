@@ -13,11 +13,11 @@ import {
 
 import Link from "next/link";
 
-type NewSidebarProps = {
+type SidebarProps = {
   mainContent: React.ReactNode; // Explicitly define mainContent as React Node
 };
 
-export default function NewSidebar({ mainContent }: NewSidebarProps) {
+export default function Sidebar({ mainContent }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<Record<string, boolean>>({});

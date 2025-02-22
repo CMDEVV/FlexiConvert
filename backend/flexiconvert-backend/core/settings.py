@@ -20,15 +20,15 @@ environ.Env.read_env()
 
 # SECURITY WARNING: don't run with CORS_ALLOW_ALL_ORIGINS turned on in production!
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]  # Ensure POST is allowed
-CORS_ALLOW_HEADERS = ["X-CSRFToken", "Content-Type"]  # Explicitly allow these
+CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]  
+CORS_ALLOW_HEADERS = ["X-CSRFToken", "Content-Type"]  
 
-CSRF_COOKIE_DOMAIN = ".up.railway.app"  # Good for subdomains
-CSRF_COOKIE_NAME = "csrftoken"          # Default, looks fine
-CSRF_COOKIE_PATH = "/"                  # Ensures availability site-wide
-CSRF_COOKIE_SAMESITE = "None"           # Required for cross-origin
-CSRF_COOKIE_SECURE = True               # Must be True for HTTPS in production
-CSRF_COOKIE_HTTPONLY = False            # Ensure JavaScript can read it (optional)
+CSRF_COOKIE_DOMAIN = ".up.railway.app"  
+CSRF_COOKIE_NAME = "csrftoken"         
+CSRF_COOKIE_PATH = "/"                
+CSRF_COOKIE_SAMESITE = "None"          
+CSRF_COOKIE_SECURE = True              
+CSRF_COOKIE_HTTPONLY = False            
 
 CORS_ALLOW_CREDENTIALS = True           # Required for cookies
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

@@ -1,21 +1,10 @@
 "use client";
-// import React, { useEffect } from "react";
 import CardMain from "./Card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, AlignJustify } from "lucide-react";
-// import serviceCalls from "../services/service";
 
 function HomeContent() {
-  // useEffect(() => {
-  //   fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => console.log("CSRF Token set:", data))
-  //     .catch((error) => console.error("CSRF Error:", error));
-  // }, []);
   return (
     // <div className="max-w-7xl mx-auto">
     // <div className="flex justify-between mb-6">
