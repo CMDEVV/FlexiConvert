@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
-    return JsonResponse({"message": "CSRF cookie set!"})
+    response = JsonResponse({"message": "CSRF cookie set!"})
+    response["Access-Control-Allow-Origin"] = "https://flexiconvert.up.railway.app"
+    response["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 # @csrf_exempt
 @csrf_protect 
