@@ -27,25 +27,32 @@ type UploadDataMainProp = {
   data: uploadDataType;
 };
 
-function getCookie(name) {
-  console.log("Checking for cookie:", document.cookie); // Debugging
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + "=")) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  console.log("CSRF Token Found:", cookieValue); // Debugging
-  return cookieValue;
-}
+// function getCookie(name) {
+//   console.log("Checking for cookie:", document.cookie); // Debugging
+//   let cookieValue = null;
+//   if (document.cookie && document.cookie !== "") {
+//     const cookies = document.cookie.split(";");
+//     for (let i = 0; i < cookies.length; i++) {
+//       const cookie = cookies[i].trim();
+//       if (cookie.startsWith(name + "=")) {
+//         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//         break;
+//       }
+//     }
+//   }
+//   console.log("CSRF Token Found:", cookieValue); // Debugging
+//   return cookieValue;
+// }
+
+const getCsrfTokenFromCookie = () => {
+  const cookies = document.cookie
+    .split(";")
+    .find((c) => c.trim().startsWith("csrftoken="));
+  return cookies ? cookies.split("=")[1] : null;
+};
 
 function UploadFiles({ data }: UploadDataMainProp) {
-  console.log("CSRTOKENNNNN", getCookie("csrftoken"));
+  // console.log("CSRTOKENNNNN", getCookie("csrftoken"));
   // console.log("dataaUpload", data);
   // const [selectedFiles, setSelectedFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -60,6 +67,12 @@ function UploadFiles({ data }: UploadDataMainProp) {
   //   setFileToEdit(fileIndex);
   //   setIsPopupOpen(true);
   // };
+
+  fetch("https://server-production-24fc.up.railway.app/get_csrf_token/", {
+    credentials: "include",
+  })
+    .then(() => handleSubmit())
+    .catch((err) => console.error("CSRF fetch error:", err));
 
   //@ts-ignore
   const handleFileSelect = (e) => {
@@ -153,7 +166,11 @@ function UploadFiles({ data }: UploadDataMainProp) {
     setLoading(true);
     setProgress(0);
 
-    const csrfToken = getCookie("csrftoken");
+    const csrfToken = getCsrfTokenFromCookie();
+    if (!csrfToken) {
+      console.error("CSRF token missing");
+      return;
+    }
 
     try {
       const filesToConvert = selectedFiles.filter(

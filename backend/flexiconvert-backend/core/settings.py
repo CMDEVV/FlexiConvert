@@ -18,6 +18,11 @@ from pathlib import Path
 env = environ.Env()
 environ.Env.read_env()
 
+# SECURITY WARNING: don't run with CORS_ALLOW_ALL_ORIGINS turned on in production!
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]  # Ensure POST is allowed
+CORS_ALLOW_HEADERS = ["X-CSRFToken", "Content-Type"]  # Explicitly allow these
+
 CSRF_COOKIE_DOMAIN = ".up.railway.app"  # Good for subdomains
 CSRF_COOKIE_NAME = "csrftoken"          # Default, looks fine
 CSRF_COOKIE_PATH = "/"                  # Ensures availability site-wide
@@ -37,10 +42,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20 MB
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# SECURITY WARNING: don't run with CORS_ALLOW_ALL_ORIGINS turned on in production!
-CORS_ALLOW_ALL_ORIGINS  = False
-CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]  # Ensure POST is allowed
-CORS_ALLOW_HEADERS = ["X-CSRFToken", "Content-Type"]  # Explicitly allow these
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")

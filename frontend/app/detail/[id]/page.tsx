@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import serviceCalls from "../../../services/service";
+// import serviceCalls from "../../../services/service";
 
 // export async function getServerSideProps(context) {
 //   const { id } = context.params;
@@ -47,15 +47,15 @@ function Page() {
   const data = tools.filter((item) => item.id === id);
   // console.log("UploadDataaa", data);
 
-  useEffect(() => {
-    fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => console.log("CSRF Token set:", data))
-      .catch((error) => console.error("CSRF Error:", error));
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
+  //     method: "GET",
+  //     credentials: "include",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => console.log("CSRF Token set:", data))
+  //     .catch((error) => console.error("CSRF Error:", error));
+  // }, []);
 
   return (
     <div>
