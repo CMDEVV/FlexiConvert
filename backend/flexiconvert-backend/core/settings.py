@@ -38,7 +38,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20 MB
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with CORS_ALLOW_ALL_ORIGINS turned on in production!
-CORS_ALLOW_ALL_ORIGINS  = False
+# CORS_ALLOW_ALL_ORIGINS  = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
