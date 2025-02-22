@@ -48,13 +48,13 @@ function Page() {
   // console.log("UploadDataaa", data);
 
   // useEffect(() => {
-  //   fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
-  //     method: "GET",
-  //     credentials: "include",
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => console.log("CSRF Token set:", data))
-  //     .catch((error) => console.error("CSRF Error:", error));
+  // fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
+  //   method: "GET",
+  //   credentials: "include",
+  // })
+  //   .then((response) => response.json())
+  //   .then((data) => console.log("CSRF Token set:", data))
+  //   .catch((error) => console.error("CSRF Error:", error));
   // }, []);
 
   return (

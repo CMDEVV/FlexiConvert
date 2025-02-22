@@ -68,11 +68,13 @@ function UploadFiles({ data }: UploadDataMainProp) {
   //   setIsPopupOpen(true);
   // };
 
-  fetch("https://server-production-24fc.up.railway.app/api/get_csrf_token/", {
+  fetch(`${serviceCalls.baseURL}api/get-csrf-token/`, {
+    method: "GET",
     credentials: "include",
   })
-    .then(() => handleSubmit())
-    .catch((err) => console.error("CSRF fetch error:", err));
+    .then((response) => response.json())
+    .then((data) => console.log("CSRF Token set:", data))
+    .catch((error) => console.error("CSRF Error:", error));
 
   //@ts-ignore
   const handleFileSelect = (e) => {
