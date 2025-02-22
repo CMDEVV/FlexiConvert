@@ -68,7 +68,7 @@ function UploadFiles({ data }: UploadDataMainProp) {
   //   setIsPopupOpen(true);
   // };
 
-  fetch("https://server-production-24fc.up.railway.app/get_csrf_token/", {
+  fetch("https://server-production-24fc.up.railway.app/api/get_csrf_token/", {
     credentials: "include",
   })
     .then(() => handleSubmit())
