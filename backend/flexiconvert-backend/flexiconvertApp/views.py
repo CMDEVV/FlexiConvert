@@ -8,13 +8,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from PIL import Image   # Import Resampling explicitly if needed
 from django.views.decorators.csrf import ensure_csrf_cookie,csrf_protect,csrf_exempt
-
+from django.middleware.csrf import get_token
 logger = logging.getLogger(__name__)
 
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
-    response = JsonResponse({"message": "CSRF cookie set!"})
+    token = get_token(request)
+    response = JsonResponse({"CSRF cookie set!": token})
     return response
 
 # @csrf_exempt
