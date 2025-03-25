@@ -77,15 +77,26 @@ def convert_image(request):
                             continue
 
                     # Perform the requested conversion
-                    if conversion_type == "png_to_jpeg":
-                        converted_image = image.convert("RGB")
-                        output_format = "JPEG"
-                    elif conversion_type == "jpeg_to_png":
-                        converted_image = image
-                        output_format = "PNG"
+                    if conversion_type in ["png_to_jpeg", "png_to_png"]:
+                        output_format = "JPEG" if conversion_type == "png_to_jpeg" else "PNG"
+                        converted_image = image.convert("RGB") if output_format == "JPEG" else image
+
+                    elif conversion_type in ["jpeg_to_png", "jpeg_to_jpeg"]:
+                         output_format = "PNG" if conversion_type == "jpeg_to_png" else "JPEG"
+                         converted_image = image.convert("RGB") if output_format == "JPEG" else image
                     else:
-                        results.append({"error": "Invalid 'conversion_type'"})
+                        results.append({"error": f"Invalid 'conversion_type': {conversion_type}"})
                         continue
+                
+                    # if conversion_type == "png_to_jpeg":
+                    #     converted_image = image.convert("RGB")
+                    #     output_format = "JPEG"
+                    # elif conversion_type == "jpeg_to_png":
+                    #     converted_image = image
+                    #     output_format = "PNG"
+                    # else:
+                    #     results.append({"error": "Invalid 'conversion_type'"})
+                    #     continue
 
                     # Save the converted image to a buffer
                     buffer = io.BytesIO()
