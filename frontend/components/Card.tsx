@@ -31,16 +31,16 @@ export const tools = [
       },
       {
         id: 3,
-        name: "Pdf",
-      },
-      {
-        id: 4,
         name: "Heic",
       },
-      {
-        id: 5,
-        name: "Svg",
-      },
+      // {
+      //   id: 3,
+      //   name: "Pdf",
+      // },
+      // {
+      //   id: 5,
+      //   name: "Svg",
+      // },
     ],
     // convertTo: "Custom",
     href: "#",
