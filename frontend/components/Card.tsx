@@ -29,6 +29,18 @@ export const tools = [
         id: 2,
         name: "Png",
       },
+      {
+        id: 3,
+        name: "Pdf",
+      },
+      {
+        id: 4,
+        name: "Heic",
+      },
+      {
+        id: 5,
+        name: "Svg",
+      },
     ],
     // convertTo: "Custom",
     href: "#",
