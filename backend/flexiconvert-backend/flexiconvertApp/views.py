@@ -2,8 +2,8 @@ import io
 import base64
 import logging
 import json
-import img2pdf
-from cairosvg import svg2png, svg2jpeg, svg2pdf
+# import img2pdf
+# from cairosvg import svg2png, svg2jpeg, svg2pdf
 from pillow_heif import register_heif_opener
 
 from django.shortcuts import render
