@@ -113,7 +113,7 @@ export default function Sidebar({ mainContent }: SidebarProps) {
         </div>
 
         {/* Footer pinned at bottom */}
-        <div className="p-4">
+        <div className="p-2">
           <Footer />
         </div>
       </div>
